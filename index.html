@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
@@ -9,14 +10,26 @@
   </head>
   <body>
     <div id="app">
-      <h1>Valutazioni Moduli ITS</h1>
-      <div id="toggle-buttons"></div>
-      <div id="categorie-container"></div>
-      <h2>Grafico Generale delle Categorie</h2>
-      <div class="chart-container">
-        <canvas id="categorie-chart"></canvas>
-      </div>
-      <span id="media-totale"></span>
+      <header>
+        <h1>Valutazioni Moduli ITS</h1>
+        <p class="subtitle">
+          Visualizza e confronta le valutazioni dei diversi moduli.
+        </p>
+      </header>
+      <main>
+        <div id="toggle-buttons"></div>
+        <div id="categorie-container"></div>
+        <section id="grafico-generale">
+          <h2>Grafico Generale delle Categorie</h2>
+          <div class="chart-container">
+            <canvas id="categorie-chart"></canvas>
+          </div>
+          <span id="media-totale"></span>
+        </section>
+      </main>
+      <footer>
+        <p>&copy; 2025 Valutazioni ITS. Tutti i diritti riservati.</p>
+      </footer>
     </div>
   </body>
 </html>

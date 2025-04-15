@@ -11,19 +11,25 @@ body {
 
 #app {
   background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  padding: 50px;
   width: 95%;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 40px 20px;
-  animation: fadeIn 1s ease;
+  animation: fadeIn 0.7s ease-out;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#app:hover {
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -31,76 +37,106 @@ body {
   }
 }
 
-h1,
-h2 {
-  color: #263238;
+/* Stili per l'header */
+header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  color: #37474f;
 }
 
+header h1 {
+  font-size: 2.8em;
+  margin-bottom: 10px;
+  color: #263238;
+}
+
+header .subtitle {
+  font-size: 1.2em;
+  color: #546e7a;
+}
+
+/* Stili per il main */
+main {
+  padding: 0 20px;
+}
+
+/* Stili per i toggle button */
 #toggle-buttons {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 30px;
 }
 
 .toggle-btn {
   background-color: #4caf50;
   color: white;
   border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
+  border-radius: 24px;
+  padding: 10px 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 1em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .toggle-btn:hover {
   background-color: #388e3c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.toggle-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .toggle-btn.active {
   background-color: #d32f2f;
 }
 
+/* Stili per le categorie */
 .categoria {
   border: none;
-  margin-bottom: 35px;
-  padding: 30px;
-  border-radius: 16px;
-  background-color: #e8f5e9;
+  margin-bottom: 40px;
+  padding: 35px;
+  border-radius: 20px;
+  background-color: #f1f8e9;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  animation: fadeIn 0.5s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  animation: fadeIn 0.6s ease;
+}
+
+.categoria:hover {
+  transform: translateY(-5px);
+  background-color: #e0eeda;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
 }
 
 .categoria.hidden {
   display: none;
 }
 
-.categoria:hover {
-  transform: translateY(-3px);
-  background-color: #dcedc8;
-}
-
 .categoria h3 {
   color: #2e7d32;
   margin-top: 0;
-  font-size: 20px;
+  font-size: 22px;
   border-bottom: 1px solid #c5e1a5;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .materia {
-  margin-bottom: 12px;
+  margin-bottom: 15px;
   font-size: 16px;
   display: flex;
   justify-content: space-between;
-  padding: 10px 14px;
+  align-items: center;
+  padding: 12px 16px;
   background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .materia span {
@@ -110,21 +146,42 @@ h2 {
 
 .media-categoria {
   font-weight: bold;
-  margin-top: 18px;
+  margin-top: 22px;
   color: #0288d1;
-  font-size: 17px;
+  font-size: 18px;
   text-align: right;
+}
+
+/* Stili per il grafico */
+#grafico-generale {
+  margin-top: 40px;
+}
+
+#grafico-generale h2 {
+  color: #263238;
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 2em;
 }
 
 .chart-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 25px;
+  margin-top: 30px;
 }
 
 canvas {
-  width: 300px !important;
-  height: 300px !important;
+  width: 350px !important;
+  height: 350px !important;
   max-width: 100%;
+}
+
+/* Stili per il footer */
+footer {
+  text-align: center;
+  margin-top: 50px;
+  padding: 20px;
+  color: #546e7a;
+  border-top: 1px solid #e0e0e0;
 }
