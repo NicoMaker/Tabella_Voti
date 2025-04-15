@@ -17,6 +17,18 @@ body {
   width: 95%;
   max-width: 1100px;
   margin: 40px 20px;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 h1,
@@ -24,6 +36,32 @@ h2 {
   color: #263238;
   text-align: center;
   margin-bottom: 30px;
+}
+
+#toggle-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.toggle-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background-color: #388e3c;
+}
+
+.toggle-btn.active {
+  background-color: #d32f2f;
 }
 
 .categoria {
@@ -34,6 +72,11 @@ h2 {
   background-color: #e8f5e9;
   transition: all 0.3s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  animation: fadeIn 0.5s ease;
+}
+
+.categoria.hidden {
+  display: none;
 }
 
 .categoria:hover {

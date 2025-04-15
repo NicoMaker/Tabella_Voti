@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((data) => {
       const app = document.getElementById("app");
       const container = document.getElementById("categorie-container");
+      const toggleButtons = document.getElementById("toggle-buttons");
       const chartCanvas = document
         .getElementById("categorie-chart")
         .getContext("2d");
@@ -12,9 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
       let totalCategorie = 0;
       let sommaCategorie = 0;
 
-      data.categorie.forEach((categoria) => {
+      data.categorie.forEach((categoria, index) => {
         const categoriaDiv = document.createElement("div");
         categoriaDiv.className = "categoria";
+        categoriaDiv.id = `categoria-${index}`;
 
         const titolo = document.createElement("h3");
         titolo.textContent = categoria.nome;
@@ -79,6 +81,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         container.appendChild(categoriaDiv);
+
+        // Bottone toggle
+        const toggleBtn = document.createElement("button");
+        toggleBtn.className = "toggle-btn";
+        toggleBtn.textContent = categoria.nome;
+        toggleBtn.addEventListener("click", () => {
+          categoriaDiv.classList.toggle("hidden");
+          toggleBtn.classList.toggle("active");
+        });
+        toggleButtons.appendChild(toggleBtn);
       });
 
       const mediaFinale =
@@ -87,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
           : "N/A";
       mediaTotale.textContent = mediaFinale;
 
-      // Calcolo media materie globali
+      // Media materie globali
       let sommaVoti = 0;
       let numVoti = 0;
 
