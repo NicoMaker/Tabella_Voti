@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let totalCategorie = 0;
       let sommaCategorie = 0;
 
+      // Calcolo media per ciascuna categoria
       data.categorie.forEach((categoria, index) => {
         const categoriaDiv = document.createElement("div");
         categoriaDiv.className = "categoria";
@@ -51,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
           sommaCategorie += parseFloat(media);
           totalCategorie++;
 
+          // Aggiungi il grafico per ciascuna categoria
           const canvas = document.createElement("canvas");
           categoriaDiv.appendChild(canvas);
           new Chart(canvas, {
@@ -82,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         container.appendChild(categoriaDiv);
 
-        // Bottone toggle
+        // Bottone toggle per mostrare/nascondere le categorie
         const toggleBtn = document.createElement("button");
         toggleBtn.className = "toggle-btn";
         toggleBtn.textContent = categoria.nome;
@@ -93,13 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleButtons.appendChild(toggleBtn);
       });
 
+      // Media finale delle categorie
       const mediaFinale =
         totalCategorie > 0
           ? (sommaCategorie / totalCategorie).toFixed(2)
           : "N/A";
-      mediaTotale.textContent = mediaFinale;
 
-      // Media materie globali
+      // Media complessiva di tutte le materie
       let sommaVoti = 0;
       let numVoti = 0;
 
@@ -119,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mediaMaterieDiv.textContent = `Media Totale Materie: ${mediaMaterie}`;
       app.appendChild(mediaMaterieDiv);
 
-      // Grafico generale
+      // Grafico generale delle categorie
       const etichette = data.categorie.map((cat) => cat.nome);
       const medieCategorie = data.categorie.map((cat) => {
         let somma = 0,
