@@ -253,3 +253,57 @@ canvas {
     padding: 0 1em;
   }
 }
+
+/* Imposta il layout verticale per le categorie */
+#categorie-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Stile delle singole categorie */
+.categoria {
+  flex: 1 1 300px;
+  max-width: 100%;
+  background: #f4f4f4;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Nascondi/mostra se necessario con toggle */
+.hidden {
+  display: none;
+}
+
+/* Layout mobile */
+@media (max-width: 768px) {
+  #categorie-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .categoria {
+    width: 100%;
+  }
+
+  .toggle-btn {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.5rem;
+  }
+}
+
+#grafico-generale-container {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
