@@ -16,7 +16,7 @@ body {
   padding: 50px;
   width: 95%;
   max-width: 1200px;
-  margin: 40px 20px;
+  margin: 40px 0;
   animation: fadeIn 0.7s ease-out;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
@@ -65,14 +65,16 @@ main {
 #toggle-buttons {
   display: flex;
   justify-content: center;
+  gap: 1.5em;
+  padding: 0 1.5em;
+  margin: 1.5em 0;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 30px;
 }
 
 .toggle-btn {
   background-color: #4caf50;
   color: white;
+  width: 100%;
   border: none;
   border-radius: 24px;
   padding: 10px 20px;
@@ -98,10 +100,22 @@ main {
 }
 
 /* Stili per le categorie */
+#categorie-container{
+  display: flex;
+  margin: 0;
+  padding: 1.5em 0;
+  gap: 1.5em;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
 .categoria {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   border: none;
-  margin-bottom: 40px;
-  padding: 35px;
+  width: 100%;
+  padding: 1.5em;
   border-radius: 20px;
   background-color: #f1f8e9;
   transition: all 0.3s ease;
@@ -121,17 +135,25 @@ main {
 
 .categoria h3 {
   color: #2e7d32;
+  width: 100%;
   margin-top: 0;
   font-size: 22px;
   border-bottom: 1px solid #c5e1a5;
+  text-align: center;
   padding-bottom: 10px;
   margin-bottom: 20px;
 }
 
+.materia-container{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .materia {
+  display: flex;
   margin-bottom: 15px;
   font-size: 16px;
-  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
@@ -146,6 +168,7 @@ main {
 }
 
 .media-categoria {
+  width: 100%;
   font-weight: bold;
   margin-top: 22px;
   color: #0288d1;
@@ -173,8 +196,8 @@ main {
 }
 
 canvas {
-  width: 350px !important;
-  height: 350px !important;
+  width: 450px !important;
+  height: 450px !important;
   max-width: 100%;
 }
 
