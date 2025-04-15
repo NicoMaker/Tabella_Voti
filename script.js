@@ -2,16 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("dati.json")
     .then((response) => response.json())
     .then((data) => {
-      const app = document.getElementById("app");
-      const container = document.getElementById("categorie-container");
-      const toggleButtons = document.getElementById("toggle-buttons");
-      const chartCanvas = document
-        .getElementById("categorie-chart")
-        .getContext("2d");
-      const mediaTotale = document.getElementById("media-totale");
+      const app = document.getElementById("app"),
+        container = document.getElementById("categorie-container"),
+        toggleButtons = document.getElementById("toggle-buttons"),
+        chartCanvas = document
+          .getElementById("categorie-chart")
+          .getContext("2d");
 
-      let totalCategorie = 0;
-      let sommaCategorie = 0;
+      let totalCategorie = 0,
+        sommaCategorie = 0;
 
       // Calcolo media per ciascuna categoria
       data.categorie.forEach((categoria, index) => {
@@ -24,8 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
         categoriaDiv.appendChild(titolo);
 
         const lista = document.createElement("ul");
-        let somma = 0;
-        let contatore = 0;
+        let somma = 0,
+          contatore = 0;
 
         categoria.materie.forEach((materia) => {
           const li = document.createElement("li");
@@ -42,8 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         categoriaDiv.appendChild(lista);
 
-        const media = contatore > 0 ? (somma / contatore).toFixed(2) : "N/A";
-        const mediaDiv = document.createElement("div");
+        const media = contatore > 0 ? (somma / contatore).toFixed(2) : "N/A",
+          mediaDiv = document.createElement("div");
         mediaDiv.className = "media-categoria";
         mediaDiv.textContent = `Media Categoria: ${media}`;
         categoriaDiv.appendChild(mediaDiv);
@@ -102,8 +101,8 @@ document.addEventListener("DOMContentLoaded", () => {
           : "N/A";
 
       // Media complessiva di tutte le materie
-      let sommaVoti = 0;
-      let numVoti = 0;
+      let sommaVoti = 0,
+        numVoti = 0;
 
       data.categorie.forEach((cat) =>
         cat.materie.forEach((m) => {
