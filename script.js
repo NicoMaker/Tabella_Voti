@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const li = document.createElement("li");
           li.className = "materia";
           const voto = materia.voto !== null ? materia.voto : "N/A";
-          li.innerHTML = `<span>${materia.nome}:</span> ${voto}`;
+          li.innerHTML = `${materia.nome}: <span>${voto}</span>`;
           lista.appendChild(li);
 
           if (materia.voto !== null) {
@@ -50,36 +50,36 @@ document.addEventListener("DOMContentLoaded", () => {
         if (media !== "N/A") {
           sommaCategorie += parseFloat(media);
           totalCategorie++;
+        }
 
-          // Aggiungi il grafico per ciascuna categoria
-          const canvas = document.createElement("canvas");
-          categoriaDiv.appendChild(canvas);
-          new Chart(canvas, {
-            type: "doughnut",
-            data: {
-              labels: categoria.materie.map((m) => m.nome),
-              datasets: [
-                {
-                  label: "Voti",
-                  data: categoria.materie.map((m) =>
-                    m.voto !== null ? m.voto : 0
-                  ),
-                  backgroundColor: categoria.materie.map(
-                    (_, i) => `hsl(${(i * 60) % 360}, 70%, 70%)`
-                  ),
-                },
-              ],
-            },
-            options: {
-              plugins: {
-                title: {
-                  display: true,
-                  text: `Grafico ${categoria.nome}`,
-                },
+        // Aggiungi il grafico per ciascuna categoria
+        const canvas = document.createElement("canvas");
+        categoriaDiv.appendChild(canvas);
+        new Chart(canvas, {
+          type: "doughnut",
+          data: {
+            labels: categoria.materie.map((m) => m.nome),
+            datasets: [
+              {
+                label: "Voti",
+                data: categoria.materie.map((m) =>
+                  m.voto !== null ? m.voto : 0
+                ),
+                backgroundColor: categoria.materie.map(
+                  (_, i) => `hsl(${(i * 60) % 360}, 70%, 70%)`
+                ),
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              title: {
+                display: true,
+                text: `Grafico ${categoria.nome}`,
               },
             },
-          });
-        }
+          },
+        });
 
         container.appendChild(categoriaDiv);
 
@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
       // Media complessiva di tutte le materie
       let sommaVoti = 0,
         numVoti = 0;
-
       data.categorie.forEach((cat) =>
         cat.materie.forEach((m) => {
           if (m.voto !== null) {
@@ -115,6 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const mediaMaterie =
         numVoti > 0 ? (sommaVoti / numVoti).toFixed(2) : "N/A";
+
       const mediaMaterieDiv = document.createElement("div");
       mediaMaterieDiv.className = "media-categoria";
       mediaMaterieDiv.textContent = `Media Totale Materie: ${mediaMaterie}`;
