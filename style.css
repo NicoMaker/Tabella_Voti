@@ -100,7 +100,7 @@ main {
 }
 
 /* Stili per le categorie */
-#categorie-container{
+#categorie-container {
   display: flex;
   margin: 0;
   padding: 1.5em 0;
@@ -144,7 +144,7 @@ main {
   margin-bottom: 20px;
 }
 
-.materia-container{
+.materia-container {
   width: 100%;
   margin: 0;
   padding: 0;
@@ -208,4 +208,48 @@ footer {
   padding: 20px;
   color: #546e7a;
   border-top: 1px solid #e0e0e0;
+}
+
+/* Stili per il grafico */
+#grafico-generale {
+  margin-top: 40px;
+  padding: 0 1em;
+}
+
+#grafico-generale h2 {
+  color: #263238;
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 2em;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Stile del canvas dinamico e responsivo */
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 500px;
+}
+
+/* Media query per mobile */
+@media (max-width: 768px) {
+  #grafico-generale h2 {
+    font-size: 1.6em;
+  }
+
+  canvas {
+    max-width: 100%;
+  }
+
+  .chart-container {
+    padding: 0 1em;
+  }
 }
