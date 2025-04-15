@@ -23,6 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
         categoriaDiv.appendChild(titolo);
 
         const lista = document.createElement("ul");
+        //Aggiunta classe CSS per gestire le materie
+        lista.classList.add("materia-container")
         let somma = 0,
           contatore = 0;
 
