@@ -2,10 +2,7 @@
   "categorie": [
     {
       "nome": "COMPETENZE DI BASE TRASVERSALI 1",
-      "materie": [
-        { "nome": "Inglese Tecnico", "voto": null },
-        { "nome": "Soft Skills 1", "voto": null }
-      ]
+      "materie": [{ "nome": "Inglese Tecnico", "voto": null }, { "nome": "Soft Skills 1", "voto": null }]
     },
     {
       "nome": "IT FOUNDAMENTALS",
