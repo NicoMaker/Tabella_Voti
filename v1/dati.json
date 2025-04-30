@@ -7,10 +7,10 @@
     {
       "nome": "IT FOUNDAMENTALS",
       "materie": [
-        { "nome": "Networking", "voto": 82 },
+        { "nome": "Networking", "voto": 79 },
         { "nome": "Containers", "voto": 95 },
         { "nome": "Sistemi Operativi Windows", "voto": null },
-        { "nome": "Cybersecurity", "voto": null },
+        { "nome": "Cybersecurity", "voto": 88 },
         { "nome": "Linux", "voto": null }
       ]
     },
