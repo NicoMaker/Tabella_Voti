@@ -307,10 +307,86 @@ function initializeAnnoSection(categorie, anno) {
   }
 }
 
+// Funzione per calcolare la media generale tra il primo e secondo anno
+function calcolaMediaGeneraleComplessiva(data) {
+  const categorieAnno1 = data["categorie anno 1"];
+  const categorieAnno2 = data["categorie anno 2"] || [];
+
+  let sommaVotiTotale = 0;
+  let numVotiTotale = 0;
+
+  // Calcola la somma e il numero di voti per l'anno 1
+  categorieAnno1.forEach((cat) => {
+    cat.materie.forEach((materia) => {
+      if (materia.voto !== null) {
+        sommaVotiTotale += materia.voto;
+        numVotiTotale++;
+      }
+    });
+  });
+
+  // Calcola la somma e il numero di voti per l'anno 2 (se disponibile)
+  categorieAnno2.forEach((cat) => {
+    cat.materie.forEach((materia) => {
+      if (materia.voto !== null) {
+        sommaVotiTotale += materia.voto;
+        numVotiTotale++;
+      }
+    });
+  });
+
+  // Calcola la media generale
+  return numVotiTotale > 0 ? sommaVotiTotale / numVotiTotale : 0;
+}
+
+// Funzione per calcolare la media generale per un anno specifico
+function calcolaMediaGenerale(categorie) {
+  let sommaVoti = 0;
+  let numVoti = 0;
+
+  categorie.forEach(cat => {
+    cat.materie.forEach(materia => {
+      if (materia.voto !== null) {
+        sommaVoti += materia.voto;
+        numVoti++;
+      }
+    });
+  });
+
+  return numVoti > 0 ? sommaVoti / numVoti : 0;
+}
+
 // Funzione per aggiornare le medie totali per anno
 function updateMediaTotalePerAnno(data) {
   const mediaAnno1Element = document.getElementById('media-anno1');
   const mediaAnno2Element = document.getElementById('media-anno2');
+
+  // Aggiungiamo la media generale complessiva all'HTML se non esiste già
+  let mediaGeneraleComplessivaElement = document.getElementById('media-generale-complessiva');
+  if (!mediaGeneraleComplessivaElement) {
+    // Trova il contenitore della media totale
+    const mediaTotaleContent = document.querySelector('.media-totale-content');
+    if (mediaTotaleContent) {
+      // Crea l'elemento per la media generale complessiva
+      const mediaGeneraleComplessivaDiv = document.createElement('div');
+      mediaGeneraleComplessivaDiv.className = 'media-anno media-generale-complessiva';
+
+      const annoLabel = document.createElement('span');
+      annoLabel.className = 'anno-label';
+      annoLabel.textContent = 'Media Generale Complessiva:';
+
+      mediaGeneraleComplessivaElement = document.createElement('span');
+      mediaGeneraleComplessivaElement.id = 'media-generale-complessiva';
+      mediaGeneraleComplessivaElement.className = 'media-value';
+      mediaGeneraleComplessivaElement.textContent = 'Caricamento...';
+
+      mediaGeneraleComplessivaDiv.appendChild(annoLabel);
+      mediaGeneraleComplessivaDiv.appendChild(mediaGeneraleComplessivaElement);
+
+      // Inserisci all'inizio del contenitore
+      mediaTotaleContent.insertBefore(mediaGeneraleComplessivaDiv, mediaTotaleContent.firstChild);
+    }
+  }
 
   // Calcola la media per l'anno 1
   const categorieAnno1 = data['categorie anno 1'];
@@ -324,6 +400,13 @@ function updateMediaTotalePerAnno(data) {
     mediaAnno2Element.textContent = mediaAnno2 > 0 ? mediaAnno2.toFixed(2) : 'N/A';
   } else {
     mediaAnno2Element.textContent = 'N/A';
+  }
+
+  // Calcola e visualizza la media generale complessiva
+  if (mediaGeneraleComplessivaElement) {
+    const mediaGeneraleComplessiva = calcolaMediaGeneraleComplessiva(data);
+    mediaGeneraleComplessivaElement.textContent =
+      mediaGeneraleComplessiva > 0 ? mediaGeneraleComplessiva.toFixed(2) : 'N/A';
   }
 }
 
@@ -449,26 +532,44 @@ function updateDashboardOverview(data, anno) {
   document.getElementById('miglior-categoria').textContent =
     `${migliorCategoria.nome} (${migliorCategoria.media.toFixed(2)})`;
 
-  // Calcola le materie completate
-  const materieCompletate = categorie.reduce((acc, cat) => {
-    return acc + cat.materie.filter(m => m.voto !== null).length;
-  }, 0);
+  // Calcola le materie completate per entrambi gli anni
+  let materieCompletateEntrambiAnni = 0;
+  let totalMaterieEntrambiAnni = 0;
 
-  const totalMaterie = categorie.reduce((acc, cat) => {
-    return acc + cat.materie.length;
-  }, 0);
+  // Calcola per l'anno 1
+  const categorieAnno1 = data['categorie anno 1'];
+  if (categorieAnno1) {
+    materieCompletateEntrambiAnni += categorieAnno1.reduce((acc, cat) => {
+      return acc + cat.materie.filter(m => m.voto !== null).length;
+    }, 0);
 
-  const percentualeCompletamento = Math.round((materieCompletate / totalMaterie) * 100);
+    totalMaterieEntrambiAnni += categorieAnno1.reduce((acc, cat) => {
+      return acc + cat.materie.length;
+    }, 0);
+  }
+
+  // Calcola per l'anno 2
+  const categorieAnno2 = data['categorie anno 2'];
+  if (categorieAnno2) {
+    materieCompletateEntrambiAnni += categorieAnno2.reduce((acc, cat) => {
+      return acc + cat.materie.filter(m => m.voto !== null).length;
+    }, 0);
+
+    totalMaterieEntrambiAnni += categorieAnno2.reduce((acc, cat) => {
+      return acc + cat.materie.length;
+    }, 0);
+  }
+
+  const percentualeCompletamento = Math.round((materieCompletateEntrambiAnni / totalMaterieEntrambiAnni) * 100);
 
   document.getElementById('materie-completate').textContent =
-    `${materieCompletate}/${totalMaterie} (${percentualeCompletamento}%)`;
+    `${materieCompletateEntrambiAnni}/${totalMaterieEntrambiAnni} (${percentualeCompletamento}%)`;
 
   document.getElementById('progress-completamento').style.width = `${percentualeCompletamento}%`;
 
   // Stato Anno
   document.getElementById('stato-anno').textContent = `Anno ${anno} in corso`;
-  document.getElementById('trend-stato').innerHTML =
-    '<i class="fas fa-circle-notch"></i> In corso';
+  document.getElementById('trend-stato').innerHTML = '<i class="fas fa-circle-notch"></i> In corso';
   document.getElementById('trend-stato').className = 'trend';
 
   // Confronto tra anni
@@ -507,23 +608,6 @@ function updateDashboardOverview(data, anno) {
 
   // Aggiorna i grafici
   updateCharts(data, anno);
-}
-
-// Funzione per calcolare la media generale
-function calcolaMediaGenerale(categorie) {
-  let sommaVoti = 0;
-  let numVoti = 0;
-
-  categorie.forEach(cat => {
-    cat.materie.forEach(materia => {
-      if (materia.voto !== null) {
-        sommaVoti += materia.voto;
-        numVoti++;
-      }
-    });
-  });
-
-  return numVoti > 0 ? sommaVoti / numVoti : 0;
 }
 
 // Funzione per aggiornare i grafici
@@ -624,17 +708,38 @@ function updateCharts(data, anno) {
     }
   });
 
-  // Grafico del progresso
+  // Grafico del progresso - Modificato per mostrare il completamento totale di entrambi gli anni
   if (window.progressoChartInstance) {
     window.progressoChartInstance.destroy();
   }
 
-  // Dati per il grafico del progresso
-  const materieCompletate = categorie.map(cat => {
-    return cat.materie.filter(m => m.voto !== null).length;
-  });
+  // Calcola le materie completate per entrambi gli anni
+  let materieCompletateEntrambiAnni = 0;
+  let totalMaterieEntrambiAnni = 0;
 
-  const materieTotali = categorie.map(cat => cat.materie.length);
+  // Calcola per l'anno 1
+  const categorieAnno1 = data['categorie anno 1'];
+  if (categorieAnno1) {
+    materieCompletateEntrambiAnni += categorieAnno1.reduce((acc, cat) => {
+      return acc + cat.materie.filter(m => m.voto !== null).length;
+    }, 0);
+
+    totalMaterieEntrambiAnni += categorieAnno1.reduce((acc, cat) => {
+      return acc + cat.materie.length;
+    }, 0);
+  }
+
+  // Calcola per l'anno 2
+  const categorieAnno2 = data['categorie anno 2'];
+  if (categorieAnno2) {
+    materieCompletateEntrambiAnni += categorieAnno2.reduce((acc, cat) => {
+      return acc + cat.materie.filter(m => m.voto !== null).length;
+    }, 0);
+
+    totalMaterieEntrambiAnni += categorieAnno2.reduce((acc, cat) => {
+      return acc + cat.materie.length;
+    }, 0);
+  }
 
   window.progressoChartInstance = new Chart(progressoCtx, {
     type: 'doughnut',
@@ -642,8 +747,8 @@ function updateCharts(data, anno) {
       labels: ['Completate', 'Da completare'],
       datasets: [{
         data: [
-          materieCompletate.reduce((a, b) => a + b, 0),
-          materieTotali.reduce((a, b) => a + b, 0) - materieCompletate.reduce((a, b) => a + b, 0)
+          materieCompletateEntrambiAnni,
+          totalMaterieEntrambiAnni - materieCompletateEntrambiAnni
         ],
         backgroundColor: [
           'rgba(74, 222, 128, 0.7)',
@@ -671,7 +776,14 @@ function updateCharts(data, anno) {
           borderColor: '#ddd',
           borderWidth: 1,
           padding: 15,
-          displayColors: false
+          displayColors: false,
+          callbacks: {
+            label: function (context) {
+              const value = context.raw;
+              const percentage = Math.round((value / totalMaterieEntrambiAnni) * 100);
+              return `${context.label}: ${value} (${percentage}%)`;
+            }
+          }
         }
       }
     }
@@ -1222,83 +1334,4 @@ function calcolaDistribuzioneVoti(categorie) {
   });
 
   return distribuzione;
-}
-
-// Funzione per calcolare la media generale tra il primo e secondo anno
-function calcolaMediaGeneraleComplessiva(data) {
-  const categorieAnno1 = data["categorie anno 1"]
-  const categorieAnno2 = data["categorie anno 2"] || []
-
-  let sommaVotiTotale = 0
-  let numVotiTotale = 0
-
-  // Calcola la somma e il numero di voti per l'anno 1
-  categorieAnno1.forEach((cat) => {
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        sommaVotiTotale += materia.voto
-        numVotiTotale++
-      }
-    })
-  })
-
-  // Calcola la somma e il numero di voti per l'anno 2 (se disponibile)
-  categorieAnno2.forEach((cat) => {
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        sommaVotiTotale += materia.voto
-        numVotiTotale++
-      }
-    })
-  })
-
-  // Calcola la media generale
-  return numVotiTotale > 0 ? sommaVotiTotale / numVotiTotale : 0
-}
-
-// Funzione per calcolare la media generale per un anno specifico
-function calcolaMediaGenerale(categorie) {
-  let sommaVoti = 0
-  let numVoti = 0
-
-  categorie.forEach((cat) => {
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        sommaVoti += materia.voto
-        numVoti++
-      }
-    })
-  })
-
-  return numVoti > 0 ? sommaVoti / numVoti : 0
-}
-
-// Aggiungi la funzione per calcolare la media generale complessiva dopo la funzione calcolaMediaGenerale:
-
-// Modifica la funzione updateMediaTotalePerAnno per includere anche la media generale complessiva
-function updateMediaTotalePerAnno(data) {
-  const mediaAnno1Element = document.getElementById("media-anno1")
-  const mediaAnno2Element = document.getElementById("media-anno2")
-  const mediaGeneraleComplessivaElement = document.getElementById("media-generale-complessiva")
-
-  // Calcola la media per l'anno 1
-  const categorieAnno1 = data["categorie anno 1"]
-  const mediaAnno1 = calcolaMediaGenerale(categorieAnno1)
-  mediaAnno1Element.textContent = mediaAnno1 > 0 ? mediaAnno1.toFixed(2) : "N/A"
-
-  // Calcola la media per l'anno 2 se ci sono dati
-  const categorieAnno2 = data["categorie anno 2"]
-  if (categorieAnno2 && categorieAnno2.length > 0) {
-    const mediaAnno2 = calcolaMediaGenerale(categorieAnno2)
-    mediaAnno2Element.textContent = mediaAnno2 > 0 ? mediaAnno2.toFixed(2) : "N/A"
-  } else {
-    mediaAnno2Element.textContent = "N/A"
-  }
-
-  // Calcola e visualizza la media generale complessiva
-  if (mediaGeneraleComplessivaElement) {
-    const mediaGeneraleComplessiva = calcolaMediaGeneraleComplessiva(data)
-    mediaGeneraleComplessivaElement.textContent =
-      mediaGeneraleComplessiva > 0 ? mediaGeneraleComplessiva.toFixed(2) : "N/A"
-  }
 }
