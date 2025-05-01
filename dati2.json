@@ -1,0 +1,102 @@
+{
+  "categorie anno 1": [
+    {
+      "nome": "COMPETENZE DI BASE TRASVERSALI 1",
+      "materie": [
+        { "nome": "Inglese Tecnico", "voto": null },
+        { "nome": "Soft Skills 1", "voto": null }
+      ]
+    },
+    {
+      "nome": "IT FOUNDAMENTALS",
+      "materie": [
+        { "nome": "Networking", "voto": 79 },
+        { "nome": "Containers", "voto": 95 },
+        { "nome": "Sistemi Operativi Windows", "voto": null },
+        { "nome": "Cybersecurity", "voto": 88 },
+        { "nome": "Linux", "voto": null }
+      ]
+    },
+    {
+      "nome": "INTERACTION DESIGN",
+      "materie": [
+        { "nome": "UX Design", "voto": 87 },
+        { "nome": "Psicologia con il Design", "voto": 75 },
+        { "nome": "Architettura dell'Informazione", "voto": null },
+        { "nome": "Prototipazione", "voto": 60 },
+        { "nome": "Accessibilitàc e Usabilità", "voto": 75 },
+        { "nome": "Copywriting", "voto": null },
+        { "nome": "Grafica Digitale", "voto": 80 }
+      ]
+    },
+    {
+      "nome": "Web Development 1",
+      "materie": [
+        { "nome": "Linguaggi Web", "voto": 70 },
+        { "nome": "Sviluppo WEB Server Side ", "voto": null },
+        { "nome": "Sviluppo Distribuito ", "voto": null },
+        { "nome": "Fondamenti di Programmazione", "voto": 85 },
+        { "nome": "Javascript", "voto": null },
+        { "nome": "Web Content Manager", "voto": null }
+      ]
+    },
+    {
+      "nome": "Project Work anno 1",
+      "materie": [{ "nome": "Project Work", "voto": null }]
+    },
+    {
+      "nome": "Stage",
+      "materie": [{ "nome": "Stage", "voto": null }]
+    }
+  ],
+  "categorie anno 2": [
+    {
+      "nome": "COMPETENZE DI BASE TRASVERSALI 2",
+      "materie": [
+        { "nome": "Inglese Tecnico Avanzato", "voto": 82 },
+        { "nome": "Soft Skills 2", "voto": 78 }
+      ]
+    },
+    {
+      "nome": "IT ADVANCED",
+      "materie": [
+        { "nome": "Cloud Computing", "voto": 85 },
+        { "nome": "DevOps", "voto": 90 },
+        { "nome": "Sistemi Operativi Avanzati", "voto": 75 },
+        { "nome": "Cybersecurity Avanzata", "voto": 92 },
+        { "nome": "Linux Avanzato", "voto": 88 }
+      ]
+    },
+    {
+      "nome": "UX/UI DESIGN",
+      "materie": [
+        { "nome": "UI Design", "voto": 91 },
+        { "nome": "Design Systems", "voto": 85 },
+        { "nome": "User Research", "voto": 79 },
+        { "nome": "Prototipazione Avanzata", "voto": 83 },
+        { "nome": "Accessibilità Web", "voto": 80 },
+        { "nome": "Content Strategy", "voto": null },
+        { "nome": "Motion Design", "voto": 77 }
+      ]
+    },
+    {
+      "nome": "Web Development 2",
+      "materie": [
+        { "nome": "Framework Frontend", "voto": 88 },
+        { "nome": "Backend Avanzato", "voto": 82 },
+        { "nome": "API Development", "voto": 85 },
+        { "nome": "Testing e QA", "voto": null },
+        { "nome": "JavaScript Avanzato", "voto": 90 },
+        { "nome": "CMS Avanzati", "voto": 76 }
+      ]
+    },
+    {
+      "nome": "Project Work anno 2",
+      "materie": [{ "nome": "Project Work", "voto": 94 }]
+    },
+    {
+      "nome": "Stage Avanzato",
+      "materie": [{ "nome": "Stage", "voto": null }]
+    }
+  ]
+}

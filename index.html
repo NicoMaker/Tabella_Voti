@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Scolastica</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>EduDash</span>
+        </div>
+        <button id="sidebar-toggle" class="sidebar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="active"><a href="#dashboard"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a></li>
+          <li><a href="#anno1"><i class="fas fa-1"></i> <span>Anno 1</span></a></li>
+          <li><a href="#anno2"><i class="fas fa-2"></i> <span>Anno 2</span></a></li>
+          <li><a href="#confronto"><i class="fas fa-exchange-alt"></i> <span>Confronto</span></a></li>
+          <li><a href="#statistiche"><i class="fas fa-chart-pie"></i> <span>Statistiche</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <p>© 2025 EduDash</p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-left">
+          <h1 id="page-title">Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <div class="search-container">
+            <input type="text" id="search-input" placeholder="Cerca materia...">
+            <div class="search-icon">
+              <i class="fas fa-search"></i>
+            </div>
+          </div>
+          <div class="year-toggle">
+            <button class="year-btn active" data-year="1">Anno 1</button>
+            <button class="year-btn" data-year="2">Anno 2</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Overview -->
+      <section id="dashboard-section" class="content-section active">
+        <div class="dashboard-overview">
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <div class="stat-content">
+                <h3>Media Generale</h3>
+                <p id="media-generale">Caricamento...</p>
+                <div class="trend up"><i class="fas fa-arrow-up"></i> 5%</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="stat-content">
+                <h3>Miglior Categoria</h3>
+                <p id="miglior-categoria">Caricamento...</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="stat-content">
+                <h3>Completamento</h3>
+                <p id="materie-completate">Caricamento...</p>
+                <div class="progress-bar">
+                  <div class="progress" id="progress-completamento"></div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="stat-content">
+                <h3>Confronto Anni</h3>
+                <p id="confronto-anni">Caricamento...</p>
+                <div class="trend" id="trend-confronto"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-container">
+            <div class="chart-card">
+              <h3>Media per Categoria</h3>
+              <div class="chart-wrapper">
+                <canvas id="categorie-chart"></canvas>
+              </div>
+            </div>
+            <div class="chart-card">
+              <h3>Progresso Annuale</h3>
+              <div class="chart-wrapper">
+                <canvas id="progresso-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Anno 1 Section -->
+      <section id="anno1-section" class="content-section">
+        <h2>Anno 1</h2>
+        <div class="filter-container">
+          <div id="toggle-buttons-anno1" class="toggle-buttons"></div>
+        </div>
+        <div id="categorie-container-anno1" class="categorie-container"></div>
+      </section>
+
+      <!-- Anno 2 Section -->
+      <section id="anno2-section" class="content-section">
+        <h2>Anno 2</h2>
+        <div class="filter-container">
+          <div id="toggle-buttons-anno2" class="toggle-buttons"></div>
+        </div>
+        <div id="categorie-container-anno2" class="categorie-container"></div>
+      </section>
+
+      <!-- Confronto Section -->
+      <section id="confronto-section" class="content-section">
+        <h2>Confronto tra Anni</h2>
+        <div class="confronto-container">
+          <div class="confronto-chart-container">
+            <canvas id="confronto-chart"></canvas>
+          </div>
+          <div class="confronto-stats">
+            <div class="confronto-stat-card">
+              <h3>Miglioramento Generale</h3>
+              <p id="miglioramento-generale">Caricamento...</p>
+              <div class="trend" id="trend-miglioramento"></div>
+            </div>
+            <div class="confronto-stat-card">
+              <h3>Categoria Più Migliorata</h3>
+              <p id="categoria-migliorata">Caricamento...</p>
+            </div>
+            <div class="confronto-stat-card">
+              <h3>Materia Più Migliorata</h3>
+              <p id="materia-migliorata">Caricamento...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statistiche Section -->
+      <section id="statistiche-section" class="content-section">
+        <h2>Statistiche Dettagliate</h2>
+        <div class="statistiche-container">
+          <div class="statistiche-card">
+            <h3>Distribuzione Voti</h3>
+            <div class="chart-wrapper">
+              <canvas id="distribuzione-voti-chart"></canvas>
+            </div>
+          </div>
+          <div class="statistiche-card">
+            <h3>Andamento Temporale</h3>
+            <div class="chart-wrapper">
+              <canvas id="andamento-chart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="tabella-container">
+          <h3>Tabella Riassuntiva</h3>
+          <div class="tabella-wrapper">
+            <table id="tabella-riassuntiva">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th>Media Anno 1</th>
+                  <th>Media Anno 2</th>
+                  <th>Variazione</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Contenuto generato dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="loading-overlay">
+    <div class="loader-container">
+      <div class="loader"></div>
+      <p>Caricamento dati...</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
