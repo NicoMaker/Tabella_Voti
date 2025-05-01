@@ -805,3 +805,24 @@ tr:hover {
     padding: 15px;
   }
 }
+
+/* Aggiungi stile per la media generale complessiva */
+.media-generale-complessiva {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+  text-align: center;
+}
+
+.media-generale-complessiva .media-value {
+  font-size: 2.2rem;
+  color: var(--secondary-color);
+}
+
+/* Modifica il media query per dispositivi mobili */
+@media (max-width: 480px) {
+  .media-generale-complessiva .media-value {
+    font-size: 1.8rem;
+  }
+}

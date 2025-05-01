@@ -1223,3 +1223,82 @@ function calcolaDistribuzioneVoti(categorie) {
 
   return distribuzione;
 }
+
+// Funzione per calcolare la media generale tra il primo e secondo anno
+function calcolaMediaGeneraleComplessiva(data) {
+  const categorieAnno1 = data["categorie anno 1"]
+  const categorieAnno2 = data["categorie anno 2"] || []
+
+  let sommaVotiTotale = 0
+  let numVotiTotale = 0
+
+  // Calcola la somma e il numero di voti per l'anno 1
+  categorieAnno1.forEach((cat) => {
+    cat.materie.forEach((materia) => {
+      if (materia.voto !== null) {
+        sommaVotiTotale += materia.voto
+        numVotiTotale++
+      }
+    })
+  })
+
+  // Calcola la somma e il numero di voti per l'anno 2 (se disponibile)
+  categorieAnno2.forEach((cat) => {
+    cat.materie.forEach((materia) => {
+      if (materia.voto !== null) {
+        sommaVotiTotale += materia.voto
+        numVotiTotale++
+      }
+    })
+  })
+
+  // Calcola la media generale
+  return numVotiTotale > 0 ? sommaVotiTotale / numVotiTotale : 0
+}
+
+// Funzione per calcolare la media generale per un anno specifico
+function calcolaMediaGenerale(categorie) {
+  let sommaVoti = 0
+  let numVoti = 0
+
+  categorie.forEach((cat) => {
+    cat.materie.forEach((materia) => {
+      if (materia.voto !== null) {
+        sommaVoti += materia.voto
+        numVoti++
+      }
+    })
+  })
+
+  return numVoti > 0 ? sommaVoti / numVoti : 0
+}
+
+// Aggiungi la funzione per calcolare la media generale complessiva dopo la funzione calcolaMediaGenerale:
+
+// Modifica la funzione updateMediaTotalePerAnno per includere anche la media generale complessiva
+function updateMediaTotalePerAnno(data) {
+  const mediaAnno1Element = document.getElementById("media-anno1")
+  const mediaAnno2Element = document.getElementById("media-anno2")
+  const mediaGeneraleComplessivaElement = document.getElementById("media-generale-complessiva")
+
+  // Calcola la media per l'anno 1
+  const categorieAnno1 = data["categorie anno 1"]
+  const mediaAnno1 = calcolaMediaGenerale(categorieAnno1)
+  mediaAnno1Element.textContent = mediaAnno1 > 0 ? mediaAnno1.toFixed(2) : "N/A"
+
+  // Calcola la media per l'anno 2 se ci sono dati
+  const categorieAnno2 = data["categorie anno 2"]
+  if (categorieAnno2 && categorieAnno2.length > 0) {
+    const mediaAnno2 = calcolaMediaGenerale(categorieAnno2)
+    mediaAnno2Element.textContent = mediaAnno2 > 0 ? mediaAnno2.toFixed(2) : "N/A"
+  } else {
+    mediaAnno2Element.textContent = "N/A"
+  }
+
+  // Calcola e visualizza la media generale complessiva
+  if (mediaGeneraleComplessivaElement) {
+    const mediaGeneraleComplessiva = calcolaMediaGeneraleComplessiva(data)
+    mediaGeneraleComplessivaElement.textContent =
+      mediaGeneraleComplessiva > 0 ? mediaGeneraleComplessiva.toFixed(2) : "N/A"
+  }
+}
