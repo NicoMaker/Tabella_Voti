@@ -23,6 +23,7 @@
   --header-height: 70px;
   --border-radius: 12px;
   --transition-speed: 0.3s;
+  --edutech-gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
 }
 
 * {
@@ -48,20 +49,18 @@ body {
 /* Sidebar */
 .sidebar {
   width: var(--sidebar-width);
-  background: linear-gradient(
-    180deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
+  background: var(--edutech-gradient);
   color: white;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 100;
-  transition: width var(--transition-speed) ease;
+  transition: width var(--transition-speed) ease,
+    transform var(--transition-speed) ease;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow);
 }
 
 .sidebar.collapsed {
@@ -86,6 +85,7 @@ body {
 
 .logo i {
   font-size: 1.5rem;
+  color: white;
 }
 
 .sidebar-toggle {
@@ -125,7 +125,7 @@ body {
 
 .sidebar-nav a:hover,
 .sidebar-nav li.active a {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.2);
   color: white;
 }
 
@@ -184,8 +184,23 @@ body {
   z-index: 99;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .header-left h1 {
   font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
   color: var(--text-primary);
 }
 
@@ -357,6 +372,72 @@ body {
   transition: width 1s ease;
 }
 
+/* Media Totale per Anno */
+.media-totale-container {
+  margin-bottom: 20px;
+}
+
+.media-totale-card {
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.media-totale-card h3 {
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.media-totale-content {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.media-anno {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.anno-label {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.media-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.media-totale-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.media-totale-box {
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  padding: 15px 30px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: 500;
+}
+
+.media-totale-box .media-value {
+  font-size: 1.5rem;
+}
+
 /* Charts Container */
 .charts-container {
   display: grid;
@@ -473,6 +554,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  margin-bottom: 30px;
 }
 
 .confronto-chart-container {
@@ -507,6 +589,21 @@ body {
   font-size: 1.3rem;
   font-weight: bold;
   color: var(--text-primary);
+}
+
+/* Medie Categorie per Anni */
+.medie-categorie-container {
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-top: 30px;
+}
+
+.medie-categorie-container h3 {
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  font-size: 1.1rem;
 }
 
 /* Statistiche Section */
@@ -599,6 +696,17 @@ tr:hover {
   visibility: hidden;
 }
 
+/* No Data Message */
+.no-data {
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .confronto-container {
@@ -607,9 +715,16 @@ tr:hover {
 }
 
 @media (max-width: 768px) {
+  .confronto-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
   .sidebar {
-    width: var(--sidebar-collapsed-width);
+    width: var(--sidebar-width);
     transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
   }
 
   .sidebar.mobile-visible {
@@ -617,7 +732,7 @@ tr:hover {
     width: var(--sidebar-width);
   }
 
-  .sidebar-toggle {
+  .mobile-menu-btn {
     display: block;
   }
 
@@ -644,6 +759,11 @@ tr:hover {
   .stats-row {
     grid-template-columns: 1fr;
   }
+
+  .media-totale-content {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -661,5 +781,27 @@ tr:hover {
 
   .categorie-container {
     grid-template-columns: 1fr;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .logo i {
+    font-size: 1.2rem;
+  }
+
+  .header-left h1 {
+    font-size: 1.2rem;
+  }
+
+  .media-value {
+    font-size: 1.5rem;
+  }
+
+  .media-totale-box {
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
   }
 }

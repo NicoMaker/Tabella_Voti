@@ -27,12 +27,6 @@ function initApp() {
   const mobileMenuBtn = document.createElement('button');
   mobileMenuBtn.className = 'mobile-menu-btn';
   mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-  mobileMenuBtn.style.display = 'none';
-  mobileMenuBtn.style.background = 'transparent';
-  mobileMenuBtn.style.border = 'none';
-  mobileMenuBtn.style.fontSize = '1.5rem';
-  mobileMenuBtn.style.cursor = 'pointer';
-  mobileMenuBtn.style.color = 'var(--text-primary)';
 
   const headerLeft = document.querySelector('.header-left');
   headerLeft.insertBefore(mobileMenuBtn, headerLeft.firstChild);
@@ -108,6 +102,12 @@ function initApp() {
 
     // Aggiorna la dashboard con l'anno corrente
     updateDashboard(currentYear);
+
+    // Aggiorna le medie totali per anno
+    updateMediaTotalePerAnno(data);
+
+    // Inizializza il grafico delle medie categorie per anni
+    initializeMedieCategorieChart(data);
   });
 }
 
@@ -116,8 +116,6 @@ async function loadData() {
   try {
     const response = await fetch('dati.json');
     const data = await response.json();
-
-    // Non generiamo più dati fittizi per l'anno 2, usiamo solo quelli esistenti
     return data;
   } catch (error) {
     console.error('Errore nel caricamento dei dati:', error);
@@ -131,7 +129,7 @@ function initializeDashboard(data) {
   initializeAnnoSection(data['categorie anno 1'], 1);
 
   // Inizializza l'anno 2 solo se esistono dati
-  if (data['categorie anno 2']) {
+  if (data['categorie anno 2'] && data['categorie anno 2'].length > 0) {
     initializeAnnoSection(data['categorie anno 2'], 2);
   } else {
     // Se non ci sono dati per l'anno 2, mostra un messaggio
@@ -153,10 +151,15 @@ function initializeDashboard(data) {
 function initializeAnnoSection(categorie, anno) {
   const container = document.getElementById(`categorie-container-anno${anno}`);
   const toggleButtons = document.getElementById(`toggle-buttons-anno${anno}`);
+  const mediaTotaleAnno = document.getElementById(`media-totale-anno${anno}`);
 
   // Svuota i container
   container.innerHTML = '';
   toggleButtons.innerHTML = '';
+
+  // Calcola la media totale per questo anno
+  let sommaVotiTotale = 0;
+  let numVotiTotale = 0;
 
   // Crea i toggle button per le categorie
   categorie.forEach((categoria, index) => {
@@ -168,7 +171,9 @@ function initializeAnnoSection(categorie, anno) {
     toggleBtn.addEventListener('click', () => {
       toggleBtn.classList.toggle('active');
       const categoriaDiv = document.getElementById(`categoria-${anno}-${index}`);
-      categoriaDiv.style.display = toggleBtn.classList.contains('active') ? 'block' : 'none';
+      if (categoriaDiv) {
+        categoriaDiv.style.display = toggleBtn.classList.contains('active') ? 'block' : 'none';
+      }
     });
     toggleButtons.appendChild(toggleBtn);
 
@@ -217,6 +222,10 @@ function initializeAnnoSection(categorie, anno) {
 
         somma += materia.voto;
         contatore++;
+
+        // Aggiorna i totali per la media dell'anno
+        sommaVotiTotale += materia.voto;
+        numVotiTotale++;
       } else {
         votoSpan.textContent = 'N/A';
         votoSpan.style.backgroundColor = 'rgba(100, 116, 139, 0.2)';
@@ -239,6 +248,32 @@ function initializeAnnoSection(categorie, anno) {
 
     container.appendChild(categoriaDiv);
   });
+
+  // Aggiorna la media totale per questo anno
+  const mediaTotale = numVotiTotale > 0 ? (sommaVotiTotale / numVotiTotale).toFixed(2) : 'N/A';
+  if (mediaTotaleAnno) {
+    mediaTotaleAnno.textContent = mediaTotale;
+  }
+}
+
+// Funzione per aggiornare le medie totali per anno
+function updateMediaTotalePerAnno(data) {
+  const mediaAnno1Element = document.getElementById('media-anno1');
+  const mediaAnno2Element = document.getElementById('media-anno2');
+
+  // Calcola la media per l'anno 1
+  const categorieAnno1 = data['categorie anno 1'];
+  const mediaAnno1 = calcolaMediaGenerale(categorieAnno1);
+  mediaAnno1Element.textContent = mediaAnno1 > 0 ? mediaAnno1.toFixed(2) : 'N/A';
+
+  // Calcola la media per l'anno 2 se ci sono dati
+  const categorieAnno2 = data['categorie anno 2'];
+  if (categorieAnno2 && categorieAnno2.length > 0) {
+    const mediaAnno2 = calcolaMediaGenerale(categorieAnno2);
+    mediaAnno2Element.textContent = mediaAnno2 > 0 ? mediaAnno2.toFixed(2) : 'N/A';
+  } else {
+    mediaAnno2Element.textContent = 'N/A';
+  }
 }
 
 // Funzione per inizializzare la ricerca
@@ -292,8 +327,14 @@ function updateDashboard(anno) {
   });
 
   if (anno === 1 || anno === 2) {
-    document.getElementById(`anno${anno}-section`).classList.add('active');
-    document.getElementById('page-title').textContent = `Anno ${anno}`;
+    const annoSection = document.getElementById(`anno${anno}-section`);
+    if (annoSection) {
+      annoSection.classList.add('active');
+      document.getElementById('page-title').textContent = `Anno ${anno}`;
+
+      // Aggiorna il messaggio di stato anno
+      document.getElementById('stato-anno').textContent = `Anno ${anno} in corso`;
+    }
   }
 
   // Aggiorna i dati nella dashboard overview
@@ -312,8 +353,8 @@ function updateDashboardOverview(data, anno) {
     document.getElementById('miglior-categoria').textContent = 'N/A';
     document.getElementById('materie-completate').textContent = '0/0 (0%)';
     document.getElementById('progress-completamento').style.width = '0%';
-    document.getElementById('confronto-anni').textContent = 'Dati non disponibili';
-    document.getElementById('trend-confronto').innerHTML = '';
+    document.getElementById('stato-anno').textContent = 'Dati non disponibili';
+    document.getElementById('trend-stato').innerHTML = '';
     return;
   }
 
@@ -373,20 +414,23 @@ function updateDashboardOverview(data, anno) {
 
   document.getElementById('progress-completamento').style.width = `${percentualeCompletamento}%`;
 
+  // Stato Anno
+  document.getElementById('stato-anno').textContent = `Anno ${anno} in corso`;
+  document.getElementById('trend-stato').innerHTML =
+    '<i class="fas fa-circle-notch"></i> In corso';
+  document.getElementById('trend-stato').className = 'trend';
+
   // Confronto tra anni
   if (anno === 1) {
-    document.getElementById('confronto-anni').textContent = 'Anno 1 in corso';
-    document.getElementById('trend-confronto').innerHTML =
-      '<i class="fas fa-circle-notch"></i> In corso';
-    document.getElementById('trend-confronto').className = 'trend';
+    // Nessun confronto per l'anno 1
+    document.getElementById('trend-media').innerHTML = '';
   } else {
     // Calcola la differenza tra le medie degli anni
     const categorieAnno1 = data['categorie anno 1'];
     const categorieAnno2 = data['categorie anno 2'];
 
     if (!categorieAnno1 || !categorieAnno2) {
-      document.getElementById('confronto-anni').textContent = 'Dati non disponibili';
-      document.getElementById('trend-confronto').innerHTML = '';
+      document.getElementById('trend-media').innerHTML = '';
       return;
     }
 
@@ -395,21 +439,18 @@ function updateDashboardOverview(data, anno) {
 
     const differenza = mediaAnno2 - mediaAnno1;
 
-    document.getElementById('confronto-anni').textContent =
-      `${differenza > 0 ? '+' : ''}${differenza.toFixed(2)} rispetto all'Anno 1`;
-
     if (differenza > 0) {
-      document.getElementById('trend-confronto').innerHTML =
-        '<i class="fas fa-arrow-up"></i> Miglioramento';
-      document.getElementById('trend-confronto').className = 'trend up';
+      document.getElementById('trend-media').innerHTML =
+        `<i class="fas fa-arrow-up"></i> +${differenza.toFixed(2)} rispetto all'Anno 1`;
+      document.getElementById('trend-media').className = 'trend up';
     } else if (differenza < 0) {
-      document.getElementById('trend-confronto').innerHTML =
-        '<i class="fas fa-arrow-down"></i> Peggioramento';
-      document.getElementById('trend-confronto').className = 'trend down';
+      document.getElementById('trend-media').innerHTML =
+        `<i class="fas fa-arrow-down"></i> ${differenza.toFixed(2)} rispetto all'Anno 1`;
+      document.getElementById('trend-media').className = 'trend down';
     } else {
-      document.getElementById('trend-confronto').innerHTML =
-        '<i class="fas fa-equals"></i> Stabile';
-      document.getElementById('trend-confronto').className = 'trend';
+      document.getElementById('trend-media').innerHTML =
+        '<i class="fas fa-equals"></i> Stabile rispetto all\'Anno 1';
+      document.getElementById('trend-media').className = 'trend';
     }
   }
 
@@ -436,8 +477,13 @@ function calcolaMediaGenerale(categorie) {
 
 // Funzione per aggiornare i grafici
 function updateCharts(data, anno) {
-  const categorieChart = document.getElementById('categorie-chart').getContext('2d');
-  const progressoChart = document.getElementById('progresso-chart').getContext('2d');
+  const categorieChart = document.getElementById('categorie-chart');
+  const progressoChart = document.getElementById('progresso-chart');
+
+  if (!categorieChart || !progressoChart) return;
+
+  const categorieCtx = categorieChart.getContext('2d');
+  const progressoCtx = progressoChart.getContext('2d');
 
   // Verifica se ci sono dati per questo anno
   const categorie = data[`categorie anno ${anno}`];
@@ -473,7 +519,7 @@ function updateCharts(data, anno) {
     window.categorieChartInstance.destroy();
   }
 
-  window.categorieChartInstance = new Chart(categorieChart, {
+  window.categorieChartInstance = new Chart(categorieCtx, {
     type: 'bar',
     data: {
       labels: etichette,
@@ -539,7 +585,7 @@ function updateCharts(data, anno) {
 
   const materieTotali = categorie.map(cat => cat.materie.length);
 
-  window.progressoChartInstance = new Chart(progressoChart, {
+  window.progressoChartInstance = new Chart(progressoCtx, {
     type: 'doughnut',
     data: {
       labels: ['Completate', 'Da completare'],
@@ -583,12 +629,15 @@ function updateCharts(data, anno) {
 
 // Funzione per inizializzare la sezione di confronto
 function initializeConfrontoSection(data) {
-  const confrontoChart = document.getElementById('confronto-chart').getContext('2d');
+  const confrontoChart = document.getElementById('confronto-chart');
+  if (!confrontoChart) return;
+
+  const confrontoCtx = confrontoChart.getContext('2d');
   const categorieAnno1 = data['categorie anno 1'];
   const categorieAnno2 = data['categorie anno 2'];
 
   // Verifica se ci sono dati per entrambi gli anni
-  if (!categorieAnno1 || !categorieAnno2) {
+  if (!categorieAnno1 || !categorieAnno2 || categorieAnno1.length === 0 || categorieAnno2.length === 0) {
     document.getElementById('miglioramento-generale').textContent = 'Dati non disponibili';
     document.getElementById('categoria-migliorata').textContent = 'Dati non disponibili';
     document.getElementById('materia-migliorata').textContent = 'Dati non disponibili';
@@ -631,7 +680,7 @@ function initializeConfrontoSection(data) {
     window.confrontoChartInstance.destroy();
   }
 
-  window.confrontoChartInstance = new Chart(confrontoChart, {
+  window.confrontoChartInstance = new Chart(confrontoCtx, {
     type: 'radar',
     data: {
       labels: etichette,
@@ -707,7 +756,7 @@ function initializeConfrontoSection(data) {
     trendMiglioramento.className = 'trend';
   }
 
-  // Trova la categoria migliore (non più "più migliorata")
+  // Trova la categoria migliore
   let migliorCategoria = { nome: 'Nessuna', media: 0 };
 
   for (let i = 0; i < etichette.length; i++) {
@@ -721,16 +770,10 @@ function initializeConfrontoSection(data) {
     }
   }
 
-  // Aggiorna il testo da "Categoria Più Migliorata" a "Categoria Migliore"
-  const categoriaMigliorataTitle = document.querySelector('.confronto-stat-card:nth-child(2) h3');
-  if (categoriaMigliorataTitle) {
-    categoriaMigliorataTitle.textContent = 'Categoria Migliore';
-  }
-
   document.getElementById('categoria-migliorata').textContent =
     `${migliorCategoria.nome} (${migliorCategoria.media.toFixed(2)})`;
 
-  // Trova la materia migliore (non più "più migliorata")
+  // Trova la materia migliore
   let migliorMateria = { nome: 'Nessuna', voto: 0 };
 
   for (let i = 0; i < categorieAnno2.length; i++) {
@@ -748,27 +791,143 @@ function initializeConfrontoSection(data) {
     }
   }
 
-  // Aggiorna il testo da "Materia Più Migliorata" a "Materia Migliore"
-  const materiaMigliorataTitle = document.querySelector('.confronto-stat-card:nth-child(3) h3');
-  if (materiaMigliorataTitle) {
-    materiaMigliorataTitle.textContent = 'Materia Migliore';
-  }
-
   document.getElementById('materia-migliorata').textContent =
     `${migliorMateria.nome} (${migliorMateria.voto})`;
 }
 
+// Funzione per inizializzare il grafico delle medie categorie per anni
+function initializeMedieCategorieChart(data) {
+  const medieCategorieChart = document.getElementById('medie-categorie-chart');
+  if (!medieCategorieChart) return;
+
+  const medieCategorieCtx = medieCategorieChart.getContext('2d');
+  const categorieAnno1 = data['categorie anno 1'];
+  const categorieAnno2 = data['categorie anno 2'];
+
+  // Verifica se ci sono dati per entrambi gli anni
+  if (!categorieAnno1 || !categorieAnno2 || categorieAnno1.length === 0 || categorieAnno2.length === 0) {
+    return;
+  }
+
+  // Calcola le medie per categoria per entrambi gli anni
+  const etichette = categorieAnno1.map(cat => cat.nome);
+
+  const medieAnno1 = categorieAnno1.map(cat => {
+    let somma = 0;
+    let count = 0;
+
+    cat.materie.forEach(materia => {
+      if (materia.voto !== null) {
+        somma += materia.voto;
+        count++;
+      }
+    });
+
+    return count > 0 ? somma / count : 0;
+  });
+
+  const medieAnno2 = categorieAnno2.map(cat => {
+    let somma = 0;
+    let count = 0;
+
+    cat.materie.forEach(materia => {
+      if (materia.voto !== null) {
+        somma += materia.voto;
+        count++;
+      }
+    });
+
+    return count > 0 ? somma / count : 0;
+  });
+
+  // Grafico delle medie categorie per anni
+  if (window.medieCategorieChartInstance) {
+    window.medieCategorieChartInstance.destroy();
+  }
+
+  window.medieCategorieChartInstance = new Chart(medieCategorieCtx, {
+    type: 'bar',
+    data: {
+      labels: etichette,
+      datasets: [
+        {
+          label: 'Anno 1',
+          data: medieAnno1,
+          backgroundColor: 'rgba(67, 97, 238, 0.7)',
+          borderColor: 'rgba(67, 97, 238, 1)',
+          borderWidth: 1,
+          borderRadius: 5,
+          maxBarThickness: 40
+        },
+        {
+          label: 'Anno 2',
+          data: medieAnno2,
+          backgroundColor: 'rgba(76, 201, 240, 0.7)',
+          borderColor: 'rgba(76, 201, 240, 1)',
+          borderWidth: 1,
+          borderRadius: 5,
+          maxBarThickness: 40
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        },
+        tooltip: {
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1,
+          padding: 15,
+          displayColors: true,
+          callbacks: {
+            label: function (context) {
+              return `Media: ${context.raw.toFixed(2)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          grid: {
+            display: true,
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+}
+
 // Funzione per inizializzare la sezione statistiche
 function initializeStatisticheSection(data) {
-  const distribuzioneVotiChart = document.getElementById('distribuzione-voti-chart').getContext('2d');
-  const andamentoChart = document.getElementById('andamento-chart').getContext('2d');
-  const tabellaRiassuntiva = document.getElementById('tabella-riassuntiva').querySelector('tbody');
+  const distribuzioneVotiChart = document.getElementById('distribuzione-voti-chart');
+  const andamentoChart = document.getElementById('andamento-chart');
+  const tabellaRiassuntiva = document.getElementById('tabella-riassuntiva');
+
+  if (!distribuzioneVotiChart || !andamentoChart || !tabellaRiassuntiva) return;
+
+  const distribuzioneVotiCtx = distribuzioneVotiChart.getContext('2d');
+  const andamentoCtx = andamentoChart.getContext('2d');
+  const tabellaBody = tabellaRiassuntiva.querySelector('tbody');
 
   const categorieAnno1 = data['categorie anno 1'];
   const categorieAnno2 = data['categorie anno 2'];
 
   // Verifica se ci sono dati per entrambi gli anni
-  if (!categorieAnno1 || !categorieAnno2) {
+  if (!categorieAnno1 || !categorieAnno2 || categorieAnno1.length === 0 || categorieAnno2.length === 0) {
     // Se non ci sono dati per uno degli anni, mostra un messaggio
     if (window.distribuzioneVotiChartInstance) {
       window.distribuzioneVotiChartInstance.destroy();
@@ -776,7 +935,9 @@ function initializeStatisticheSection(data) {
     if (window.andamentoChartInstance) {
       window.andamentoChartInstance.destroy();
     }
-    tabellaRiassuntiva.innerHTML = '<tr><td colspan="4">Dati non disponibili</td></tr>';
+    if (tabellaBody) {
+      tabellaBody.innerHTML = '<tr><td colspan="4">Dati non disponibili</td></tr>';
+    }
     return;
   }
 
@@ -789,7 +950,7 @@ function initializeStatisticheSection(data) {
     window.distribuzioneVotiChartInstance.destroy();
   }
 
-  window.distribuzioneVotiChartInstance = new Chart(distribuzioneVotiChart, {
+  window.distribuzioneVotiChartInstance = new Chart(distribuzioneVotiCtx, {
     type: 'bar',
     data: {
       labels: ['60-69', '70-79', '80-89', '90-100'],
@@ -888,7 +1049,7 @@ function initializeStatisticheSection(data) {
     return count > 0 ? somma / count : 0;
   });
 
-  window.andamentoChartInstance = new Chart(andamentoChart, {
+  window.andamentoChartInstance = new Chart(andamentoCtx, {
     type: 'line',
     data: {
       labels: etichette,
@@ -953,36 +1114,38 @@ function initializeStatisticheSection(data) {
   });
 
   // Tabella riassuntiva
-  tabellaRiassuntiva.innerHTML = '';
+  if (tabellaBody) {
+    tabellaBody.innerHTML = '';
 
-  for (let i = 0; i < etichette.length; i++) {
-    const tr = document.createElement('tr');
+    for (let i = 0; i < etichette.length; i++) {
+      const tr = document.createElement('tr');
 
-    const tdCategoria = document.createElement('td');
-    tdCategoria.textContent = etichette[i];
+      const tdCategoria = document.createElement('td');
+      tdCategoria.textContent = etichette[i];
 
-    const tdMediaAnno1 = document.createElement('td');
-    tdMediaAnno1.textContent = medieAnno1[i].toFixed(2);
+      const tdMediaAnno1 = document.createElement('td');
+      tdMediaAnno1.textContent = medieAnno1[i].toFixed(2);
 
-    const tdMediaAnno2 = document.createElement('td');
-    tdMediaAnno2.textContent = medieAnno2[i].toFixed(2);
+      const tdMediaAnno2 = document.createElement('td');
+      tdMediaAnno2.textContent = medieAnno2[i].toFixed(2);
 
-    const tdVariazione = document.createElement('td');
-    const variazione = medieAnno2[i] - medieAnno1[i];
-    tdVariazione.textContent = `${variazione > 0 ? '+' : ''}${variazione.toFixed(2)}`;
+      const tdVariazione = document.createElement('td');
+      const variazione = medieAnno2[i] - medieAnno1[i];
+      tdVariazione.textContent = `${variazione > 0 ? '+' : ''}${variazione.toFixed(2)}`;
 
-    if (variazione > 0) {
-      tdVariazione.style.color = '#15803d';
-    } else if (variazione < 0) {
-      tdVariazione.style.color = '#b91c1c';
+      if (variazione > 0) {
+        tdVariazione.style.color = '#15803d';
+      } else if (variazione < 0) {
+        tdVariazione.style.color = '#b91c1c';
+      }
+
+      tr.appendChild(tdCategoria);
+      tr.appendChild(tdMediaAnno1);
+      tr.appendChild(tdMediaAnno2);
+      tr.appendChild(tdVariazione);
+
+      tabellaBody.appendChild(tr);
     }
-
-    tr.appendChild(tdCategoria);
-    tr.appendChild(tdMediaAnno1);
-    tr.appendChild(tdMediaAnno2);
-    tr.appendChild(tdVariazione);
-
-    tabellaRiassuntiva.appendChild(tr);
   }
 }
 

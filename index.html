@@ -18,7 +18,7 @@
       <div class="sidebar-header">
         <div class="logo">
           <i class="fas fa-graduation-cap"></i>
-          <span>EduDash</span>
+          <span>EduTech</span>
         </div>
         <button id="sidebar-toggle" class="sidebar-toggle">
           <i class="fas fa-bars"></i>
@@ -34,7 +34,7 @@
         </ul>
       </nav>
       <div class="sidebar-footer">
-        <p>© 2025 EduDash</p>
+        <p>© 2025 EduTech</p>
       </div>
     </aside>
 
@@ -69,7 +69,7 @@
               <div class="stat-content">
                 <h3>Media Generale</h3>
                 <p id="media-generale">Caricamento...</p>
-                <div class="trend up"><i class="fas fa-arrow-up"></i> 5%</div>
+                <div class="trend" id="trend-media"></div>
               </div>
             </div>
             <div class="stat-card">
@@ -98,9 +98,26 @@
                 <i class="fas fa-chart-line"></i>
               </div>
               <div class="stat-content">
-                <h3>Confronto Anni</h3>
-                <p id="confronto-anni">Caricamento...</p>
-                <div class="trend" id="trend-confronto"></div>
+                <h3>Stato Anno</h3>
+                <p id="stato-anno">Caricamento...</p>
+                <div class="trend" id="trend-stato"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Media Totale per Anno -->
+          <div class="media-totale-container">
+            <div class="media-totale-card">
+              <h3>Media Totale per Anno</h3>
+              <div class="media-totale-content">
+                <div class="media-anno">
+                  <span class="anno-label">Anno 1:</span>
+                  <span id="media-anno1" class="media-value">Caricamento...</span>
+                </div>
+                <div class="media-anno">
+                  <span class="anno-label">Anno 2:</span>
+                  <span id="media-anno2" class="media-value">Caricamento...</span>
+                </div>
               </div>
             </div>
           </div>
@@ -129,6 +146,14 @@
           <div id="toggle-buttons-anno1" class="toggle-buttons"></div>
         </div>
         <div id="categorie-container-anno1" class="categorie-container"></div>
+
+        <!-- Media Totale Anno 1 -->
+        <div class="media-totale-footer">
+          <div class="media-totale-box">
+            <span>Media Totale Anno 1:</span>
+            <span id="media-totale-anno1" class="media-value">Caricamento...</span>
+          </div>
+        </div>
       </section>
 
       <!-- Anno 2 Section -->
@@ -138,6 +163,14 @@
           <div id="toggle-buttons-anno2" class="toggle-buttons"></div>
         </div>
         <div id="categorie-container-anno2" class="categorie-container"></div>
+
+        <!-- Media Totale Anno 2 -->
+        <div class="media-totale-footer">
+          <div class="media-totale-box">
+            <span>Media Totale Anno 2:</span>
+            <span id="media-totale-anno2" class="media-value">Caricamento...</span>
+          </div>
+        </div>
       </section>
 
       <!-- Confronto Section -->
@@ -154,13 +187,21 @@
               <div class="trend" id="trend-miglioramento"></div>
             </div>
             <div class="confronto-stat-card">
-              <h3>Categoria Più Migliorata</h3>
+              <h3>Categoria Migliore</h3>
               <p id="categoria-migliorata">Caricamento...</p>
             </div>
             <div class="confronto-stat-card">
-              <h3>Materia Più Migliorata</h3>
+              <h3>Materia Migliore</h3>
               <p id="materia-migliorata">Caricamento...</p>
             </div>
+          </div>
+        </div>
+
+        <!-- Grafico Medie Categorie per Anni -->
+        <div class="medie-categorie-container">
+          <h3>Medie Categorie per Anni</h3>
+          <div class="chart-wrapper">
+            <canvas id="medie-categorie-chart"></canvas>
           </div>
         </div>
       </section>
