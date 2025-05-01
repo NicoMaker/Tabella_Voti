@@ -108,7 +108,58 @@ function initApp() {
 
     // Inizializza il grafico delle medie categorie per anni
     initializeMedieCategorieChart(data);
+
+    // Migliora lo scrolling su mobile per le sezioni anno
+    miglioraScrollingMobile();
   });
+}
+
+// Funzione per migliorare lo scrolling su mobile per le sezioni anno
+function miglioraScrollingMobile() {
+  // Assicurati che le sezioni anno siano scrollabili su mobile
+  const annoSections = document.querySelectorAll('#anno1-section, #anno2-section');
+
+  annoSections.forEach(section => {
+    // Aggiungi stile per rendere la sezione scrollabile
+    section.style.overflowY = 'auto';
+    section.style.maxHeight = '100vh';
+    section.style.paddingBottom = '30px';
+
+    // Assicurati che la media totale sia sempre visibile
+    const mediaTotaleFooter = section.querySelector('.media-totale-footer');
+    if (mediaTotaleFooter) {
+      mediaTotaleFooter.style.marginTop = '30px';
+      mediaTotaleFooter.style.paddingBottom = '20px';
+    }
+
+    // Aggiungi un listener per lo scroll per assicurarsi che la sezione sia scrollabile
+    section.addEventListener('touchmove', function (e) {
+      e.stopPropagation();
+    }, { passive: true });
+  });
+
+  // Modifica lo stile CSS per la visualizzazione mobile
+  const style = document.createElement('style');
+  style.textContent = `
+    @media (max-width: 768px) {
+      .content-section {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 80px !important;
+      }
+      
+      .categorie-container {
+        padding-bottom: 20px;
+      }
+      
+      .media-totale-footer {
+        position: relative;
+        bottom: auto;
+        margin-top: 30px !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
 }
 
 // Funzione per caricare i dati
