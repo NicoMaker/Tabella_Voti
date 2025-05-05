@@ -496,12 +496,15 @@ body {
   gap: 20px;
 }
 
+/* Stile per la categoria con grafici allineati */
 .categoria {
   background-color: var(--bg-primary);
   border-radius: var(--border-radius);
   padding: 20px;
   box-shadow: var(--shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .categoria:hover {
@@ -514,10 +517,13 @@ body {
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border-color);
+  text-align: center;
 }
 
+/* Stile per la lista delle materie */
 .materia-container {
   list-style: none;
+  margin-top: 15px;
 }
 
 .materia {
@@ -544,9 +550,12 @@ body {
 
 .media-categoria {
   margin-top: 15px;
-  text-align: right;
+  text-align: center;
   font-weight: bold;
   color: var(--primary-color);
+  font-size: 1.2rem;
+  padding: 10px;
+  border-top: 1px solid var(--border-color);
 }
 
 /* Confronto Section */
@@ -707,6 +716,90 @@ tr:hover {
   font-size: 1.1rem;
 }
 
+/* Medie Categorie in Linea */
+.medie-categorie-inline {
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.medie-categorie-inline h3 {
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+/* Stile per le medie delle categorie in linea */
+.medie-categorie-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.categoria-media-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: var(--bg-accent);
+  border-radius: 10px;
+  min-width: 120px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.categoria-media-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.categoria-nome {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.categoria-valore {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* Modifica lo stile per i grafici delle materie */
+.materia-chart-container {
+  height: 200px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Grafico Materie */
+.materia-chart-container {
+  margin-top: 20px;
+  height: 200px;
+}
+
+/* Aggiungi stile per la media generale complessiva */
+.media-generale-complessiva {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+  text-align: center;
+}
+
+.media-generale-complessiva .media-value {
+  font-size: 2.2rem;
+  color: var(--secondary-color);
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .confronto-container {
@@ -764,6 +857,10 @@ tr:hover {
     flex-direction: column;
     align-items: center;
   }
+
+  .medie-categorie-row {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -804,25 +901,8 @@ tr:hover {
     align-items: center;
     padding: 15px;
   }
-}
 
-/* Aggiungi stile per la media generale complessiva */
-.media-generale-complessiva {
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
-  width: 100%;
-  text-align: center;
-}
-
-.media-generale-complessiva .media-value {
-  font-size: 2.2rem;
-  color: var(--secondary-color);
-}
-
-/* Modifica il media query per dispositivi mobili */
-@media (max-width: 480px) {
-  .media-generale-complessiva .media-value {
-    font-size: 1.8rem;
+  .categoria-media-item {
+    min-width: 100px;
   }
 }
