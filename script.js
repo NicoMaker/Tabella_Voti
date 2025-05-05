@@ -310,15 +310,6 @@ function initializeAnnoSection(categorie, anno) {
 
     categoriaDiv.appendChild(lista)
 
-    // Media categoria
-    const media = contatore > 0 ? (somma / contatore).toFixed(2) : "N/A"
-    const mediaDiv = document.createElement("div")
-    mediaDiv.className = "media-categoria"
-    mediaDiv.textContent = `Media: ${media}`
-    categoriaDiv.appendChild(mediaDiv)
-
-    container.appendChild(categoriaDiv)
-
     // Crea il grafico dopo che il DOM è stato aggiornato
     if (materieConVoto.length > 0) {
       setTimeout(() => {
@@ -337,12 +328,21 @@ function initializeAnnoSection(categorie, anno) {
 
       const categoriaValore = document.createElement("div")
       categoriaValore.className = "categoria-valore"
-      categoriaValore.textContent = media
+      categoriaValore.textContent = (somma / contatore).toFixed(2)
 
       categoriaMediaItem.appendChild(categoriaNome)
       categoriaMediaItem.appendChild(categoriaValore)
       medieCategorieRow.appendChild(categoriaMediaItem)
     }
+
+    // Media categoria - ora posizionata sotto il grafico
+    const media = contatore > 0 ? (somma / contatore).toFixed(2) : "N/A"
+    const mediaDiv = document.createElement("div")
+    mediaDiv.className = "media-categoria"
+    mediaDiv.textContent = `Media: ${media}`
+    categoriaDiv.appendChild(mediaDiv)
+
+    container.appendChild(categoriaDiv)
   })
 
   // Aggiorna la media totale per questo anno
@@ -352,7 +352,7 @@ function initializeAnnoSection(categorie, anno) {
   }
 }
 
-// Modifica la funzione createMateriaChart per utilizzare grafici a torta invece di grafici a barre
+// Modifica la funzione createMateriaChart per utilizzare grafici a torta con colori diversi per ogni spicchio
 function createMateriaChart(containerId, materie) {
   const container = document.getElementById(containerId)
   if (!container) return
@@ -364,11 +364,30 @@ function createMateriaChart(containerId, materie) {
 
   const labels = materie.map((m) => m.nome)
   const data = materie.map((m) => m.voto)
-  const backgroundColors = materie.map((m) => {
-    if (m.voto >= 80) return "rgba(74, 222, 128, 0.7)"
-    if (m.voto >= 70) return "rgba(251, 191, 36, 0.7)"
-    return "rgba(248, 113, 113, 0.7)"
-  })
+
+  // Colori diversi per ogni spicchio
+  const backgroundColors = [
+    'rgba(255, 99, 132, 0.7)',    // rosa
+    'rgba(54, 162, 235, 0.7)',    // blu
+    'rgba(255, 206, 86, 0.7)',    // giallo
+    'rgba(75, 192, 192, 0.7)',    // turchese
+    'rgba(153, 102, 255, 0.7)',   // viola
+    'rgba(255, 159, 64, 0.7)',    // arancione
+    'rgba(199, 199, 199, 0.7)',   // grigio
+    'rgba(83, 102, 255, 0.7)',    // blu-viola
+    'rgba(78, 205, 196, 0.7)',    // verde acqua
+    'rgba(255, 99, 71, 0.7)',     // rosso-arancio
+    'rgba(144, 238, 144, 0.7)',   // verde chiaro
+    'rgba(218, 165, 32, 0.7)'     // oro
+  ]
+
+  // Assicurati di avere abbastanza colori per tutti gli spicchi
+  while (backgroundColors.length < materie.length) {
+    backgroundColors = backgroundColors.concat(backgroundColors)
+  }
+
+  // Taglia l'array di colori alla lunghezza necessaria
+  const pieColors = backgroundColors.slice(0, materie.length)
 
   new Chart(ctx, {
     type: "pie",
@@ -377,8 +396,8 @@ function createMateriaChart(containerId, materie) {
       datasets: [
         {
           data: data,
-          backgroundColor: backgroundColors,
-          borderColor: backgroundColors.map((c) => c.replace("0.7", "1")),
+          backgroundColor: pieColors,
+          borderColor: pieColors.map((c) => c.replace("0.7", "1")),
           borderWidth: 1,
         },
       ],
@@ -388,7 +407,7 @@ function createMateriaChart(containerId, materie) {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: "right",
+          position: "bottom",
           labels: {
             boxWidth: 12,
             font: {

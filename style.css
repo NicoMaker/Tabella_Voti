@@ -548,6 +548,7 @@ body {
   background-color: var(--bg-accent);
 }
 
+/* Stile per la media categoria - ora sotto il grafico */
 .media-categoria {
   margin-top: 15px;
   text-align: center;
@@ -556,6 +557,8 @@ body {
   font-size: 1.2rem;
   padding: 10px;
   border-top: 1px solid var(--border-color);
+  background-color: var(--bg-accent);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 /* Confronto Section */
@@ -774,16 +777,11 @@ tr:hover {
 /* Modifica lo stile per i grafici delle materie */
 .materia-chart-container {
   height: 200px;
-  margin: 20px 0;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/* Grafico Materie */
-.materia-chart-container {
-  margin-top: 20px;
-  height: 200px;
+  width: 100%;
 }
 
 /* Aggiungi stile per la media generale complessiva */
