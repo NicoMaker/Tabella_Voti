@@ -15,8 +15,6 @@
 11. [Personalizzazione](#personalizzazione)
 12. [Gestione dei Dati](#gestione-dei-dati)
 13. [Risoluzione Problemi](#risoluzione-problemi)
-14. [FAQ](#faq)
-15. [Supporto Tecnico](#supporto-tecnico)
 
 ## Introduzione
 
