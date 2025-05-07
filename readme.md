@@ -44,8 +44,6 @@ Per utilizzare la Dashboard Scolastica EduTech sono necessari:
 ### Accesso Online
 
 1. Apri il browser e naviga all'indirizzo della Dashboard EduTech
-2. Inserisci le tue credenziali di accesso (username e password)
-3. Clicca su "Accedi" per entrare nella dashboard
 
 ### Installazione Locale
 
