@@ -390,7 +390,7 @@ function createMateriaChart(containerId, materie) {
   const pieColors = backgroundColors.slice(0, materie.length)
 
   new Chart(ctx, {
-    type: "pie",
+    type: "doughnut",
     data: {
       labels: labels,
       datasets: [
