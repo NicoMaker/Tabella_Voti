@@ -1,6 +1,6 @@
 ### Guida Completa - Dashboard Scolastica EduTech
 
-## Indice dei Contenuti
+## Indice dei Contenuti c
 
 1. [Introduzione](#introduzione)
 2. [Requisiti Tecnici](#requisiti-tecnici)
