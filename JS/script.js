@@ -169,7 +169,7 @@ function miglioraScrollingMobile() {
 // Funzione per caricare i dati
 async function loadData() {
   try {
-    const response = await fetch("dati.json")
+    const response = await fetch("JS/dati.json")
     const data = await response.json()
     return data
   } catch (error) {
