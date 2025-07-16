@@ -94,7 +94,7 @@ body {
   color: white;
   cursor: pointer;
   font-size: 1.2rem;
-  display: none;
+  display: block; /* Always visible on desktop for collapse/expand */
 }
 
 .sidebar-nav {
@@ -196,12 +196,13 @@ body {
 }
 
 .mobile-menu-btn {
-  display: none;
+  display: none; /* Hidden by default, shown on mobile */
   background: transparent;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
   color: var(--text-primary);
+  margin-right: 15px; /* Space between button and title */
 }
 
 .header-right {
@@ -806,29 +807,48 @@ tr:hover {
 }
 
 @media (max-width: 768px) {
-  .confronto-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
   .sidebar {
     width: var(--sidebar-width);
     transform: translateX(-100%);
     box-shadow: var(--shadow-lg);
+    /* Add overlay for mobile sidebar */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 101; /* Higher than main-header */
   }
 
   .sidebar.mobile-visible {
     transform: translateX(0);
-    width: var(--sidebar-width);
   }
 
-  .mobile-menu-btn {
+  /* Backdrop for mobile sidebar */
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+  }
+
+  .sidebar.mobile-visible + .sidebar-backdrop {
     display: block;
   }
 
+  .sidebar-toggle {
+    display: none; /* Hide the internal sidebar toggle on mobile */
+  }
+
+  .mobile-menu-btn {
+    display: block; /* Show the header hamburger button on mobile */
+  }
+
   .main-content {
-    margin-left: 0;
+    margin-left: 0; /* No margin on mobile */
   }
 
   .main-header {
@@ -858,6 +878,23 @@ tr:hover {
 
   .medie-categorie-row {
     justify-content: center;
+  }
+
+  /* Ensure sections are scrollable on mobile */
+  .content-section {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 80px !important; /* Add padding for better scrolling */
+  }
+
+  .categorie-container {
+    padding-bottom: 20px;
+  }
+
+  .media-totale-footer {
+    position: relative;
+    bottom: auto;
+    margin-top: 30px !important;
   }
 }
 
