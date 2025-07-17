@@ -12,7 +12,7 @@
       "materie": [
         { "nome": "Networking", "voto": 79 },
         { "nome": "Containers", "voto": 95 },
-        { "nome": "Sistemi Operativi Windows", "voto": 91 },
+        { "nome": "Sistemi Operativi Windows", "voto": null },
         { "nome": "Cybersecurity", "voto": 88 },
         { "nome": "Linux", "voto": 95 }
       ]
