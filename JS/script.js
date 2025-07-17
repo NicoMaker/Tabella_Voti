@@ -111,6 +111,7 @@ function initApp() {
 
     // Migliora lo scrolling su mobile per le sezioni anno
     miglioraScrollingMobile()
+    setupMobileMediaBar()
   })
 }
 
@@ -124,13 +125,6 @@ function miglioraScrollingMobile() {
     section.style.overflowY = "auto"
     section.style.maxHeight = "100vh"
     section.style.paddingBottom = "30px"
-
-    // Assicurati che la media totale sia sempre visibile
-    const mediaTotaleFooter = section.querySelector(".media-totale-footer")
-    if (mediaTotaleFooter) {
-      mediaTotaleFooter.style.marginTop = "30px"
-      mediaTotaleFooter.style.paddingBottom = "20px"
-    }
 
     // Aggiungi un listener per lo scroll per assicurarsi che la sezione sia scrollabile
     section.addEventListener(
@@ -154,12 +148,6 @@ function miglioraScrollingMobile() {
       
       .categorie-container {
         padding-bottom: 20px;
-      }
-      
-      .media-totale-footer {
-        position: relative;
-        bottom: auto;
-        margin-top: 30px !important;
       }
     }
   `
@@ -1448,4 +1436,93 @@ function calcolaDistribuzioneVoti(categorie) {
   })
 
   return distribuzione
+}
+
+// Funzione per aggiungere la barra sticky mobile e il menu a tendina
+function setupMobileMediaBar() {
+  function getAnnoCorrente() {
+    const anno1Active = document.getElementById('anno1-section').classList.contains('active');
+    return anno1Active ? 1 : 2;
+  }
+  function getMediaTotale(anno) {
+    const el = document.getElementById(`media-totale-anno${anno}`);
+    return el ? el.textContent : 'N/A';
+  }
+  function renderBar() {
+    let bar = document.querySelector('.media-totale-mobile-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.className = 'media-totale-mobile-bar';
+      bar.innerHTML = `
+        <span class="media-label">Media Totale:</span>
+        <span class="media-value"></span>
+        <button class="menu-btn" aria-label="Apri menu dettagli"><i class="fas fa-ellipsis-v"></i></button>
+      `;
+      document.body.appendChild(bar);
+    }
+    // Aggiorna valore
+    const anno = getAnnoCorrente();
+    bar.querySelector('.media-value').textContent = getMediaTotale(anno);
+    // Menu btn
+    const menuBtn = bar.querySelector('.menu-btn');
+    menuBtn.onclick = () => {
+      showDropdown();
+    };
+  }
+  function renderDropdown() {
+    let dropdown = document.querySelector('.media-totale-mobile-dropdown');
+    if (!dropdown) {
+      dropdown = document.createElement('div');
+      dropdown.className = 'media-totale-mobile-dropdown';
+      dropdown.innerHTML = `
+        <button class="close-btn" aria-label="Chiudi menu">&times;</button>
+        <div class="dropdown-content"></div>
+      `;
+      document.body.appendChild(dropdown);
+    }
+    // Aggiorna contenuto
+    const anno = getAnnoCorrente();
+    const media = getMediaTotale(anno);
+    dropdown.querySelector('.dropdown-content').innerHTML = `
+      <h3>Dettaglio Media Totale Anno ${anno}</h3>
+      <p style="font-size:1.5rem;font-weight:bold;color:var(--primary-color);margin-bottom:16px;">${media}</p>
+      <p>Questa è la media totale calcolata su tutte le materie dell'anno ${anno}.</p>
+    `;
+    // Chiudi
+    dropdown.querySelector('.close-btn').onclick = () => {
+      dropdown.classList.remove('active');
+    };
+  }
+  function showDropdown() {
+    renderDropdown();
+    document.querySelector('.media-totale-mobile-dropdown').classList.add('active');
+  }
+  // Aggiorna barra e menu quando cambi sezione anno
+  function updateBarAndDropdown() {
+    renderBar();
+    const dropdown = document.querySelector('.media-totale-mobile-dropdown');
+    if (dropdown && dropdown.classList.contains('active')) {
+      renderDropdown();
+    }
+  }
+  // Inizializza
+  renderBar();
+  // Aggiorna su cambio anno
+  document.querySelectorAll('.year-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setTimeout(updateBarAndDropdown, 200);
+    });
+  });
+  // Aggiorna su cambio sezione (navigazione sidebar)
+  document.querySelectorAll('.sidebar-nav a').forEach(link => {
+    link.addEventListener('click', () => {
+      setTimeout(updateBarAndDropdown, 200);
+    });
+  });
+  // Aggiorna su caricamento dati
+  const observer = new MutationObserver(() => {
+    updateBarAndDropdown();
+  });
+  observer.observe(document.getElementById('media-totale-anno1'), { childList: true });
+  observer.observe(document.getElementById('media-totale-anno2'), { childList: true });
 }

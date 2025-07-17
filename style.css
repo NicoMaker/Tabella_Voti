@@ -887,15 +887,93 @@ tr:hover {
     padding-bottom: 80px !important; /* Add padding for better scrolling */
   }
 
+  .dashboard-overview,
+  .content-section {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  #anno1-section, #anno2-section {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding-bottom: 90px !important;
+  }
+
   .categorie-container {
     padding-bottom: 20px;
   }
 
-  .media-totale-footer {
-    position: relative;
-    bottom: auto;
-    margin-top: 30px !important;
+  .media-totale-mobile-bar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+    background: var(--bg-primary);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.07);
+    border-top: 1px solid var(--border-color);
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    font-size: 1.2rem;
   }
+  .media-totale-mobile-bar .media-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-right: 8px;
+  }
+  .media-totale-mobile-bar .media-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-right: 16px;
+  }
+  .media-totale-mobile-bar .menu-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    cursor: pointer;
+  }
+  .media-totale-mobile-dropdown {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 300;
+    background: var(--bg-primary);
+    box-shadow: 0 -2px 20px rgba(0,0,0,0.15);
+    border-top: 1px solid var(--border-color);
+    padding: 24px 16px 32px 16px;
+    animation: fadeInUp 0.3s;
+  }
+  .media-totale-mobile-dropdown.active {
+    display: block;
+  }
+  .media-totale-mobile-dropdown .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--danger-color);
+    cursor: pointer;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* Aggiungi padding extra in fondo alle sezioni per non coprire i contenuti */
+  #anno1-section, #anno2-section {
+    padding-bottom: 90px !important;
+  }
+}
+@media (min-width: 769px) {
+  .media-totale-mobile-bar, .media-totale-mobile-dropdown { display: none !important; }
 }
 
 @media (max-width: 480px) {
