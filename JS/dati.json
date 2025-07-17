@@ -4,7 +4,7 @@
       "nome": "COMPETENZE DI BASE TRASVERSALI 1",
       "materie": [
         { "nome": "Inglese Tecnico", "voto": null },
-        { "nome": "Soft Skills 1", "voto": null }
+        { "nome": "Soft Skills 1", "voto": 100 }
       ]
     },
     {
@@ -12,9 +12,9 @@
       "materie": [
         { "nome": "Networking", "voto": 79 },
         { "nome": "Containers", "voto": 95 },
-        { "nome": "Sistemi Operativi Windows", "voto": null },
+        { "nome": "Sistemi Operativi Windows", "voto": 91 },
         { "nome": "Cybersecurity", "voto": 88 },
-        { "nome": "Linux", "voto": null }
+        { "nome": "Linux", "voto": 95 }
       ]
     },
     {
@@ -22,10 +22,10 @@
       "materie": [
         { "nome": "UX Design", "voto": 87 },
         { "nome": "Psicologia con il Design", "voto": 75 },
-        { "nome": "Architettura dell'Informazione", "voto": null },
+        { "nome": "Architettura dell'Informazione", "voto": 83 },
         { "nome": "Prototipazione", "voto": 60 },
         { "nome": "Accessibilitàc e Usabilità", "voto": 75 },
-        { "nome": "Copywriting", "voto": null },
+        { "nome": "Copywriting", "voto": 82 },
         { "nome": "Grafica Digitale", "voto": 80 }
       ]
     },
@@ -33,16 +33,16 @@
       "nome": "Web Development 1",
       "materie": [
         { "nome": "Linguaggi Web", "voto": 70 },
-        { "nome": "Sviluppo WEB Server Side ", "voto": null },
+        { "nome": "Sviluppo WEB Server Side ", "voto": 90 },
         { "nome": "Sviluppo Distribuito ", "voto": null },
         { "nome": "Fondamenti di Programmazione", "voto": 85 },
-        { "nome": "Javascript", "voto": null },
-        { "nome": "Web Content Manager", "voto": null }
+        { "nome": "Javascript", "voto": 100 },
+        { "nome": "Web Content Manager", "voto": 85 }
       ]
     },
     {
       "nome": "Project Work anno 1",
-      "materie": [{ "nome": "Project Work", "voto": null }]
+      "materie": [{ "nome": "Project Work", "voto": 84 }]
     },
     {
       "nome": "Stage",
