@@ -3,8 +3,8 @@
     {
       "nome": "COMPETENZE DI BASE TRASVERSALI 1",
       "materie": [
-        { "nome": "Inglese Tecnico", "voto": null },
-        { "nome": "Soft Skills 1", "voto": 100 }
+        { "nome": "Inglese Tecnico", "voto": 100 },
+        { "nome": "Soft Skills 1", "voto": null }
       ]
     },
     {
