@@ -112,6 +112,36 @@ function initApp() {
     // Migliora lo scrolling su mobile per le sezioni anno
     miglioraScrollingMobile()
     setupMobileMediaBar()
+
+    // --- LOGICA PERSONALIZZATA: mostra Anno 2 se ci sono voti ---
+    if (data["categorie anno 2"] && data["categorie anno 2"].length > 0) {
+      // Attiva il link Anno 2 nella sidebar
+      document.querySelectorAll('.sidebar-nav li').forEach((li, idx) => {
+        if(idx === 2) li.classList.add('active'); // 0:dashboard, 1:anno1, 2:anno2
+        else li.classList.remove('active');
+      });
+      // Mostra solo la sezione Anno 2
+      document.querySelectorAll('.content-section').forEach(section => {
+        if(section.id === 'anno2-section') section.classList.add('active');
+        else section.classList.remove('active');
+      });
+      // Aggiorna il titolo
+      const pageTitle = document.getElementById('page-title');
+      pageTitle.textContent = 'Anno 2';
+    } else {
+      // Altrimenti mostra la dashboard (comportamento di default)
+      document.querySelectorAll('.sidebar-nav li').forEach((li, idx) => {
+        if(idx === 0) li.classList.add('active');
+        else li.classList.remove('active');
+      });
+      document.querySelectorAll('.content-section').forEach(section => {
+        if(section.id === 'dashboard-section') section.classList.add('active');
+        else section.classList.remove('active');
+      });
+      const pageTitle = document.getElementById('page-title');
+      pageTitle.textContent = 'Dashboard';
+    }
+    // --- FINE LOGICA PERSONALIZZATA ---
   })
 }
 

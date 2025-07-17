@@ -887,23 +887,13 @@ tr:hover {
     padding-bottom: 80px !important; /* Add padding for better scrolling */
   }
 
-  .dashboard-overview,
-  .content-section {
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-  #anno1-section, #anno2-section {
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-    padding-bottom: 90px !important;
-  }
-
   .categorie-container {
     padding-bottom: 20px;
   }
 
+  .media-totale-footer {
+    display: none !important;
+  }
   .media-totale-mobile-bar {
     display: flex;
     position: fixed;
@@ -949,27 +939,19 @@ tr:hover {
     border-top: 1px solid var(--border-color);
     padding: 24px 16px 32px 16px;
     animation: fadeInUp 0.3s;
-    max-height: 80vh;
-    overflow: hidden;
-    position: fixed;
   }
-  .media-totale-mobile-dropdown .dropdown-content {
-    max-height: 60vh;
-    overflow-y: auto;
-    padding-top: 40px;
+  .media-totale-mobile-dropdown.active {
+    display: block;
   }
   .media-totale-mobile-dropdown .close-btn {
-    position: sticky;
-    top: 0;
+    position: absolute;
+    top: 12px;
     right: 16px;
-    z-index: 2;
-    background: var(--bg-primary);
+    background: none;
     border: none;
     font-size: 2rem;
     color: var(--danger-color);
     cursor: pointer;
-    float: right;
-    margin-top: 8px;
   }
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(40px); }
