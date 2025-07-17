@@ -1482,11 +1482,18 @@ function setupMobileMediaBar() {
     }
     // Aggiorna contenuto
     const anno = getAnnoCorrente();
-    const media = getMediaTotale(anno);
+    const media1 = getMediaTotale(1);
+    const media2 = getMediaTotale(2);
+    const mediaGen = document.getElementById('media-generale-complessiva')?.textContent || 'N/A';
     dropdown.querySelector('.dropdown-content').innerHTML = `
-      <h3>Dettaglio Media Totale Anno ${anno}</h3>
-      <p style="font-size:1.5rem;font-weight:bold;color:var(--primary-color);margin-bottom:16px;">${media}</p>
-      <p>Questa è la media totale calcolata su tutte le materie dell'anno ${anno}.</p>
+      <h3 style='margin-bottom:16px;'>Medie Dettagliate</h3>
+      <div style='display:flex;flex-direction:column;gap:12px;'>
+        <div><span style='color:var(--text-secondary);font-weight:500;'>Media Generale Complessiva:</span> <span style='font-weight:bold;color:var(--secondary-color);font-size:1.2rem;'>${mediaGen}</span></div>
+        <div><span style='color:var(--text-secondary);font-weight:500;'>Media Anno 1:</span> <span style='font-weight:bold;color:var(--primary-color);font-size:1.2rem;'>${media1}</span></div>
+        <div><span style='color:var(--text-secondary);font-weight:500;'>Media Anno 2:</span> <span style='font-weight:bold;color:var(--primary-color);font-size:1.2rem;'>${media2}</span></div>
+      </div>
+      <hr style='margin:18px 0;'>
+      <p style='font-size:0.95rem;color:var(--text-secondary);'>Questi valori sono calcolati su tutte le materie con voto disponibile.</p>
     `;
     // Chiudi
     dropdown.querySelector('.close-btn').onclick = () => {

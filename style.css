@@ -949,19 +949,27 @@ tr:hover {
     border-top: 1px solid var(--border-color);
     padding: 24px 16px 32px 16px;
     animation: fadeInUp 0.3s;
+    max-height: 80vh;
+    overflow: hidden;
+    position: fixed;
   }
-  .media-totale-mobile-dropdown.active {
-    display: block;
+  .media-totale-mobile-dropdown .dropdown-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-top: 40px;
   }
   .media-totale-mobile-dropdown .close-btn {
-    position: absolute;
-    top: 12px;
+    position: sticky;
+    top: 0;
     right: 16px;
-    background: none;
+    z-index: 2;
+    background: var(--bg-primary);
     border: none;
     font-size: 2rem;
     color: var(--danger-color);
     cursor: pointer;
+    float: right;
+    margin-top: 8px;
   }
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(40px); }
