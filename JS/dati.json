@@ -21,7 +21,7 @@
       "nome": "INTERACTION DESIGN",
       "materie": [
         { "nome": "UX Design", "voto": 87 },
-        { "nome": "Psicologia con il Design", "voto": 75 },
+        { "nome": "Psicologia per il Design", "voto": 75 },
         { "nome": "Architettura dell'Informazione", "voto": 83 },
         { "nome": "Prototipazione", "voto": 60 },
         { "nome": "Accessibilità e Usabilità", "voto": 75 },
