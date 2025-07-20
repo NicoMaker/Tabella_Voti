@@ -1,4 +1,4 @@
-### Guida Completa - Dashboard Scolastica EduTech y
+### Guida Completa - Dashboard Scolastica EduTech 
 
 ## Indice dei Contenuti 
 
