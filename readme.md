@@ -1,5 +1,5 @@
 ### Guida Completa - Dashboard Scolastica EduTech 
- f
+
 ## Indice dei Contenuti 
 
 1. [Introduzione](#introduzione)
