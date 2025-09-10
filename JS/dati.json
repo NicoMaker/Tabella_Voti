@@ -33,8 +33,8 @@
       "nome": "Web Development 1",
       "materie": [
         { "nome": "Linguaggi Web", "voto": 70 },
-        { "nome": "Sviluppo WEB Server Side ", "voto": 90 },
-        { "nome": "Sviluppo Distribuito ", "voto": null },
+        { "nome": "Sviluppo WEB Server Side", "voto": 90 },
+        { "nome": "Sviluppo Distribuito", "voto": null },
         { "nome": "Fondamenti di Programmazione", "voto": 85 },
         { "nome": "Javascript", "voto": 100 },
         { "nome": "Web Content Manager", "voto": 85 }
@@ -42,11 +42,57 @@
     },
     {
       "nome": "Project Work anno 1",
-      "materie": [{ "nome": "Project Work", "voto": 84 }]
+      "materie": [
+        { "nome": "Project Work", "voto": 84 }
+      ]
     },
     {
       "nome": "Stage",
-      "materie": [{ "nome": "Stage", "voto": null }]
+      "materie": [
+        { "nome": "Stage", "voto": null }
+      ]
+    }
+  ],
+  "categorie anno 2": [
+    {
+      "nome": "COMPETENZE DI BASE Anno 2",
+      "materie": [
+        { "nome": "Inglese Tecnico", "voto": null },
+        { "nome": "Soft Skills 2", "voto": null },
+        { "nome": "Lean e Digital transformation", "voto": null },
+        { "nome": "Budgeting ICT", "voto": null },
+        { "nome": "Sostenibilità", "voto": null }
+      ]
+    },
+    {
+      "nome": "Web Development 2",
+      "materie": [
+        { "nome": "Architetture Software", "voto": null },
+        { "nome": "Database", "voto": null },
+        { "nome": "Single page applications", "voto": null },
+        { "nome": "Design Patterns", "voto": null }
+      ]
+    },
+    {
+      "nome": "Advanced Web Dev",
+      "materie": [
+        { "nome": "Web Deployment", "voto": null },
+        { "nome": "Cross-platform development", "voto": null },
+        { "nome": "AI - Intelligenza Artificiale", "voto": null },
+        { "nome": "Marketing Digitale", "voto": null }
+      ]
+    },
+    {
+      "nome": "Project Work anno 2",
+      "materie": [
+        { "nome": "Project Work", "voto": null }
+      ]
+    },
+    {
+      "nome": "Stage",
+      "materie": [
+        { "nome": "Stage", "voto": null }
+      ]
     }
   ]
 }
