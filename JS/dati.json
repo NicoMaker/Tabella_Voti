@@ -49,7 +49,7 @@
     {
       "nome": "Stage",
       "materie": [
-        { "nome": "Stage", "voto": null }
+        { "nome": "Stage", "voto": 71 }
       ]
     }
   ],
