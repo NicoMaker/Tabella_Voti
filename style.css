@@ -961,6 +961,43 @@ tr:hover {
   #anno1-section, #anno2-section {
     padding-bottom: 90px !important;
   }
+
+  /* Responsive table for statistics */
+  #tabella-riassuntiva thead {
+    display: none;
+  }
+  #tabella-riassuntiva tr {
+    display: block;
+    margin-bottom: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    background: var(--bg-primary);
+    border-bottom: none;
+  }
+  #tabella-riassuntiva td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  #tabella-riassuntiva td:last-child {
+    border-bottom: none;
+  }
+  #tabella-riassuntiva td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-align: left;
+    margin-right: 10px;
+    color: var(--text-secondary);
+  }
+  #tabella-riassuntiva td:first-child {
+    background-color: var(--bg-accent);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
 }
 @media (min-width: 769px) {
   .media-totale-mobile-bar, .media-totale-mobile-dropdown { display: none !important; }

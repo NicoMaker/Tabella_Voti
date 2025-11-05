@@ -1391,15 +1391,19 @@ function initializeStatisticheSection(data) {
 
       const tdCategoria = document.createElement("td")
       tdCategoria.textContent = etichetteUniche[i]
+      tdCategoria.dataset.label = "Categoria"
 
       const tdMediaAnno1 = document.createElement("td")
       tdMediaAnno1.textContent = medieAnno1[i].toFixed(2)
+      tdMediaAnno1.dataset.label = "Media Anno 1"
 
       const tdMediaAnno2 = document.createElement("td")
       tdMediaAnno2.textContent = medieAnno2[i].toFixed(2)
+      tdMediaAnno2.dataset.label = "Media Anno 2"
 
       const tdVariazione = document.createElement("td")
       const variazione = medieAnno2[i] - medieAnno1[i]
+      tdVariazione.dataset.label = "Variazione"
       tdVariazione.textContent = `${variazione > 0 ? "+" : ""}${variazione.toFixed(2)}`
 
       if (variazione > 0) {
