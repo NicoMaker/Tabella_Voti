@@ -68,7 +68,13 @@ function initApp() {
         section.classList.remove("active")
         if (section.id === `${targetId}-section`) {
           section.classList.add("active")
-          pageTitle.textContent = section.querySelector("h2")?.textContent || "Dashboard"
+          // Se la sezione è la dashboard, aggiorna la vista generale
+          if (targetId === 'dashboard') {
+            pageTitle.textContent = "Dashboard";
+            loadData().then(data => updateDashboardOverview(data)); // Mostra dati aggregati
+          } else {
+            pageTitle.textContent = section.querySelector("h2")?.textContent || "Dashboard";
+          }
         }
       })
 
@@ -88,7 +94,15 @@ function initApp() {
       yearButtons.forEach((b) => b.classList.remove("active"))
       btn.classList.add("active")
       currentYear = Number.parseInt(btn.dataset.year)
-      updateDashboard(currentYear)
+
+      // Quando si cambia anno, vai alla sezione dell'anno corrispondente
+      navLinks.forEach(link => link.parentElement.classList.remove('active'));
+      document.querySelector(`.sidebar-nav a[href="#anno${currentYear}"]`).parentElement.classList.add('active');
+
+      contentSections.forEach(section => section.classList.remove('active'));
+      const targetSection = document.getElementById(`anno${currentYear}-section`);
+      targetSection.classList.add('active');
+      pageTitle.textContent = `Anno ${currentYear}`;
     })
   })
 
@@ -101,7 +115,7 @@ function initApp() {
     initializeSearch(data)
 
     // Aggiorna la dashboard con l'anno corrente
-    updateDashboard(currentYear)
+    updateDashboardOverview(data) // Mostra la dashboard generale all'inizio
 
     // Aggiorna le medie totali per anno
     updateMediaTotalePerAnno(data)
@@ -113,37 +127,30 @@ function initApp() {
     miglioraScrollingMobile()
     setupMobileMediaBar()
 
-    // --- LOGICA PERSONALIZZATA: mostra Anno 2 se ci sono voti ---
-    if (data["categorie anno 2"] && data["categorie anno 2"].length > 0) {
-      // Attiva il link Anno 2 nella sidebar
-      document.querySelectorAll('.sidebar-nav li').forEach((li, idx) => {
-        if(idx === 2) li.classList.add('active'); // 0:dashboard, 1:anno1, 2:anno2
-        else li.classList.remove('active');
-      });
-      // Mostra solo la sezione Anno 2
-      document.querySelectorAll('.content-section').forEach(section => {
-        if(section.id === 'anno2-section') section.classList.add('active');
-        else section.classList.remove('active');
-      });
-      // Aggiorna il titolo
-      const pageTitle = document.getElementById('page-title');
-      pageTitle.textContent = 'Anno 2';
-    } else {
-      // Altrimenti mostra la dashboard (comportamento di default)
-      document.querySelectorAll('.sidebar-nav li').forEach((li, idx) => {
-        if(idx === 0) li.classList.add('active');
-        else li.classList.remove('active');
-      });
-      document.querySelectorAll('.content-section').forEach(section => {
-        if(section.id === 'dashboard-section') section.classList.add('active');
-        else section.classList.remove('active');
-      });
-      const pageTitle = document.getElementById('page-title');
-      pageTitle.textContent = 'Dashboard';
-    }
-    // --- FINE LOGICA PERSONALIZZATA ---
+    // Mostra la dashboard come pagina predefinita
+    document.querySelectorAll('.sidebar-nav li').forEach((li, idx) => {
+      if (idx === 0) li.classList.add('active');
+      else li.classList.remove('active');
+    });
+    document.querySelectorAll('.content-section').forEach(section => {
+      if (section.id === 'dashboard-section') section.classList.add('active');
+      else section.classList.remove('active');
+    });
+    const pageTitle = document.getElementById('page-title');
+    pageTitle.textContent = 'Dashboard';
   })
 }
+
+// Funzione per normalizzare i nomi delle categorie (es. "Web Development 1" -> "Web Development")
+function getNormalizedCategoryName(nomeCategoria) {
+  return nomeCategoria
+    .replace(/ anno \d/i, "")
+    .replace(/ \d$/i, "")
+    .replace(/ trasversali/i, "")
+    .trim()
+}
+
+
 
 // Funzione per migliorare lo scrolling su mobile per le sezioni anno
 function miglioraScrollingMobile() {
@@ -223,7 +230,7 @@ function initializeDashboard(data) {
   initializeStatisticheSection(data)
 
   // Inizializza la dashboard overview
-  updateDashboardOverview(data, 1)
+  updateDashboardOverview(data)
 }
 
 // Modifica la funzione initializeAnnoSection per allineare i grafici e posizionare la media sotto
@@ -596,65 +603,23 @@ function initializeSearch(data) {
   })
 }
 
-// Funzione per aggiornare la dashboard in base all'anno selezionato
-function updateDashboard(anno) {
-  // Mostra la sezione corrispondente all'anno
-  document.querySelectorAll(".content-section").forEach((section) => {
-    section.classList.remove("active")
-  })
-
-  if (anno === 1 || anno === 2) {
-    const annoSection = document.getElementById(`anno${anno}-section`)
-    if (annoSection) {
-      annoSection.classList.add("active")
-      document.getElementById("page-title").textContent = `Anno ${anno}`
-
-      // Aggiorna il messaggio di stato anno
-      document.getElementById("stato-anno").textContent = `Anno ${anno} in corso`
-    }
-  }
-
-  // Aggiorna i dati nella dashboard overview
-  loadData().then((data) => {
-    updateDashboardOverview(data, anno)
-  })
-}
-
 // Funzione per aggiornare la dashboard overview
-function updateDashboardOverview(data, anno) {
-  const categorie = data[`categorie anno ${anno}`]
-
-  // Se non ci sono dati per questo anno, mostra un messaggio
-  if (!categorie || categorie.length === 0) {
-    document.getElementById("media-generale").textContent = "N/A"
-    document.getElementById("miglior-categoria").textContent = "N/A"
-    document.getElementById("materie-completate").textContent = "0/0 (0%)"
-    document.getElementById("progress-completamento").style.width = "0%"
-    document.getElementById("stato-anno").textContent = "Dati non disponibili"
-    document.getElementById("trend-stato").innerHTML = ""
-    return
-  }
+function updateDashboardOverview(data) {
+  const categorieAnno1 = data["categorie anno 1"] || []
+  const categorieAnno2 = data["categorie anno 2"] || []
+  const tutteLeCategorie = [...categorieAnno1, ...categorieAnno2]
 
   // Calcola la media generale
-  let sommaVoti = 0
-  let numVoti = 0
-
-  categorie.forEach((cat) => {
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        sommaVoti += materia.voto
-        numVoti++
-      }
-    })
-  })
-
-  const mediaGenerale = numVoti > 0 ? (sommaVoti / numVoti).toFixed(2) : "N/A"
+  const mediaGenerale = calcolaMediaGeneraleComplessiva(data).toFixed(2)
   document.getElementById("media-generale").textContent = mediaGenerale
 
   // Trova la categoria con la media più alta
   let migliorCategoria = { nome: "Nessuna", media: 0 }
 
-  categorie.forEach((cat) => {
+  const mediePerCategoria = {}
+  const conteggiPerCategoria = {}
+
+  tutteLeCategorie.forEach((cat) => {
     let somma = 0
     let count = 0
 
@@ -665,12 +630,21 @@ function updateDashboardOverview(data, anno) {
       }
     })
 
-    const media = count > 0 ? somma / count : 0
-
-    if (media > migliorCategoria.media) {
-      migliorCategoria = { nome: cat.nome, media: media }
+    const normalizedName = getNormalizedCategoryName(cat.nome)
+    if (!mediePerCategoria[normalizedName]) {
+      mediePerCategoria[normalizedName] = 0
+      conteggiPerCategoria[normalizedName] = 0
     }
+    mediePerCategoria[normalizedName] += somma
+    conteggiPerCategoria[normalizedName] += count
   })
+
+  for (const nomeCat in mediePerCategoria) {
+    const media = conteggiPerCategoria[nomeCat] > 0 ? mediePerCategoria[nomeCat] / conteggiPerCategoria[nomeCat] : 0
+    if (media > migliorCategoria.media) {
+      migliorCategoria = { nome: nomeCat, media: media }
+    }
+  }
 
   document.getElementById("miglior-categoria").textContent =
     `${migliorCategoria.nome} (${migliorCategoria.media.toFixed(2)})`
@@ -680,7 +654,6 @@ function updateDashboardOverview(data, anno) {
   let totalMaterieEntrambiAnni = 0
 
   // Calcola per l'anno 1
-  const categorieAnno1 = data["categorie anno 1"]
   if (categorieAnno1) {
     materieCompletateEntrambiAnni += categorieAnno1.reduce((acc, cat) => {
       return acc + cat.materie.filter((m) => m.voto !== null).length
@@ -692,7 +665,6 @@ function updateDashboardOverview(data, anno) {
   }
 
   // Calcola per l'anno 2
-  const categorieAnno2 = data["categorie anno 2"]
   if (categorieAnno2) {
     materieCompletateEntrambiAnni += categorieAnno2.reduce((acc, cat) => {
       return acc + cat.materie.filter((m) => m.voto !== null).length
@@ -711,49 +683,38 @@ function updateDashboardOverview(data, anno) {
   document.getElementById("progress-completamento").style.width = `${percentualeCompletamento}%`
 
   // Stato Anno
-  document.getElementById("stato-anno").textContent = `Anno ${anno} in corso`
-  document.getElementById("trend-stato").innerHTML = '<i class="fas fa-circle-notch"></i> In corso'
+  document.getElementById("stato-anno").textContent = `Riepilogo Generale`
+  document.getElementById("trend-stato").innerHTML = '<i class="fas fa-globe-europe"></i> Tutti gli anni'
   document.getElementById("trend-stato").className = "trend"
 
   // Confronto tra anni
-  if (anno === 1) {
-    // Nessun confronto per l'anno 1
-    document.getElementById("trend-media").innerHTML = ""
-  } else {
-    // Calcola la differenza tra le medie degli anni
-    const categorieAnno1 = data["categorie anno 1"]
-    const categorieAnno2 = data["categorie anno 2"]
+  const mediaAnno1 = calcolaMediaGenerale(categorieAnno1)
+  const mediaAnno2 = calcolaMediaGenerale(categorieAnno2)
 
-    if (!categorieAnno1 || !categorieAnno2) {
-      document.getElementById("trend-media").innerHTML = ""
-      return
-    }
-
-    const mediaAnno1 = calcolaMediaGenerale(categorieAnno1)
-    const mediaAnno2 = calcolaMediaGenerale(categorieAnno2)
-
+  if (mediaAnno1 > 0 && mediaAnno2 > 0) {
     const differenza = mediaAnno2 - mediaAnno1
-
     if (differenza > 0) {
       document.getElementById("trend-media").innerHTML =
-        `<i class="fas fa-arrow-up"></i> +${differenza.toFixed(2)} rispetto all'Anno 1`
+        `<i class="fas fa-arrow-up"></i> Anno 2 in miglioramento`
       document.getElementById("trend-media").className = "trend up"
     } else if (differenza < 0) {
       document.getElementById("trend-media").innerHTML =
-        `<i class="fas fa-arrow-down"></i> ${differenza.toFixed(2)} rispetto all'Anno 1`
+        `<i class="fas fa-arrow-down"></i> Anno 2 in peggioramento`
       document.getElementById("trend-media").className = "trend down"
     } else {
-      document.getElementById("trend-media").innerHTML = '<i class="fas fa-equals"></i> Stabile rispetto all\'Anno 1'
+      document.getElementById("trend-media").innerHTML = '<i class="fas fa-equals"></i> Rendimento stabile'
       document.getElementById("trend-media").className = "trend"
     }
+  } else {
+    document.getElementById("trend-media").innerHTML = ""
   }
 
   // Aggiorna i grafici
-  updateCharts(data, anno)
+  updateCharts(data)
 }
 
 // Funzione per aggiornare i grafici
-function updateCharts(data, anno) {
+function updateCharts(data) {
   const categorieChart = document.getElementById("categorie-chart")
   const progressoChart = document.getElementById("progresso-chart")
 
@@ -763,8 +724,10 @@ function updateCharts(data, anno) {
   const progressoCtx = progressoChart.getContext("2d")
 
   // Verifica se ci sono dati per questo anno
-  const categorie = data[`categorie anno ${anno}`]
-  if (!categorie || categorie.length === 0) {
+  const categorieAnno1 = data["categorie anno 1"] || []
+  const categorieAnno2 = data["categorie anno 2"] || []
+  const tutteLeCategorie = [...categorieAnno1, ...categorieAnno2]
+  if (tutteLeCategorie.length === 0) {
     // Se non ci sono dati, pulisci i grafici
     if (window.categorieChartInstance) {
       window.categorieChartInstance.destroy()
@@ -776,20 +739,30 @@ function updateCharts(data, anno) {
   }
 
   // Dati per il grafico delle categorie
-  const etichette = categorie.map((cat) => cat.nome)
-  const medieCategorie = categorie.map((cat) => {
-    let somma = 0
-    let count = 0
+  const mediePerCategoria = {}
+  const conteggiPerCategoria = {}
 
+  tutteLeCategorie.forEach((cat) => {
+    const normalizedName = getNormalizedCategoryName(cat.nome)
+    if (!mediePerCategoria[normalizedName]) {
+      mediePerCategoria[normalizedName] = 0
+      conteggiPerCategoria[normalizedName] = 0
+    }
     cat.materie.forEach((materia) => {
       if (materia.voto !== null) {
-        somma += materia.voto
-        count++
+        mediePerCategoria[normalizedName] += materia.voto
+        conteggiPerCategoria[normalizedName]++
       }
     })
-
-    return count > 0 ? somma / count : 0
   })
+
+  const etichette = Object.keys(mediePerCategoria)
+  const medieCategorie = etichette.map(
+    (nomeCat) =>
+    (conteggiPerCategoria[nomeCat] > 0
+      ? mediePerCategoria[nomeCat] / conteggiPerCategoria[nomeCat]
+      : 0)
+  )
 
   // Grafico delle categorie
   if (window.categorieChartInstance) {
@@ -802,7 +775,7 @@ function updateCharts(data, anno) {
       labels: etichette,
       datasets: [
         {
-          label: `Media Categoria - Anno ${anno}`,
+          label: `Media Categorie Generale`,
           data: medieCategorie,
           backgroundColor: "rgba(67, 97, 238, 0.7)",
           borderColor: "rgba(67, 97, 238, 1)",
@@ -860,7 +833,6 @@ function updateCharts(data, anno) {
   let totalMaterieEntrambiAnni = 0
 
   // Calcola per l'anno 1
-  const categorieAnno1 = data["categorie anno 1"]
   if (categorieAnno1) {
     materieCompletateEntrambiAnni += categorieAnno1.reduce((acc, cat) => {
       return acc + cat.materie.filter((m) => m.voto !== null).length
@@ -872,7 +844,6 @@ function updateCharts(data, anno) {
   }
 
   // Calcola per l'anno 2
-  const categorieAnno2 = data["categorie anno 2"]
   if (categorieAnno2) {
     materieCompletateEntrambiAnni += categorieAnno2.reduce((acc, cat) => {
       return acc + cat.materie.filter((m) => m.voto !== null).length
@@ -943,45 +914,50 @@ function initializeConfrontoSection(data) {
   }
 
   // Calcola le medie per categoria per entrambi gli anni
-  const etichette = categorieAnno1.map((cat) => cat.nome)
+  const etichetteUniche = [
+    ...new Set([
+      ...categorieAnno1.map((c) => getNormalizedCategoryName(c.nome)),
+      ...categorieAnno2.map((c) => getNormalizedCategoryName(c.nome)),
+    ]),
+  ]
 
-  const medieAnno1 = categorieAnno1.map((cat) => {
-    let somma = 0
-    let count = 0
+  function getMediePerAnno(categorie, etichette) {
+    const medie = {}
+    etichette.forEach((e) => (medie[e] = { somma: 0, count: 0 }))
 
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        somma += materia.voto
-        count++
+    categorie.forEach((cat) => {
+      const normalizedName = getNormalizedCategoryName(cat.nome)
+      if (medie[normalizedName]) {
+        cat.materie.forEach((m) => {
+          if (m.voto !== null) {
+            medie[normalizedName].somma += m.voto
+            medie[normalizedName].count++
+          }
+        })
       }
     })
 
-    return count > 0 ? somma / count : 0
-  })
-
-  const medieAnno2 = categorieAnno2.map((cat) => {
-    let somma = 0
-    let count = 0
-
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        somma += materia.voto
-        count++
-      }
-    })
-
-    return count > 0 ? somma / count : 0
-  })
-
-  // Grafico di confronto
-  if (window.confrontoChartInstance) {
-    window.confrontoChartInstance.destroy()
+    return etichette.map((e) => (medie[e].count > 0 ? medie[e].somma / medie[e].count : 0))
   }
 
+  const medieAnno1 = getMediePerAnno(categorieAnno1, etichetteUniche)
+  const medieAnno2 = getMediePerAnno(categorieAnno2, etichetteUniche)
+
+  // Calcola la media generale per categoria (per il grafico a barre)
+  const medieGeneraliCategorie = etichetteUniche.map((etichetta, index) => {
+    let somma = 0
+    let count = 0
+    if (medieAnno1[index] > 0) { somma += medieAnno1[index]; count++; }
+    if (medieAnno2[index] > 0) { somma += medieAnno2[index]; count++; }
+    return count > 0 ? somma / count : 0;
+  });
+
+  // Grafico di confronto (Radar)
+  if (window.confrontoChartInstance) window.confrontoChartInstance.destroy()
   window.confrontoChartInstance = new Chart(confrontoCtx, {
     type: "radar",
     data: {
-      labels: etichette,
+      labels: etichetteUniche,
       datasets: [
         {
           label: "Anno 1",
@@ -1054,41 +1030,41 @@ function initializeConfrontoSection(data) {
     trendMiglioramento.className = "trend"
   }
 
-  // Trova la categoria migliore
+  // Trova la categoria migliore (calcolando la media complessiva tra i due anni)
   let migliorCategoria = { nome: "Nessuna", media: 0 }
+  for (let i = 0; i < etichetteUniche.length; i++) {
+    const media1 = medieAnno1[i];
+    const media2 = medieAnno2[i];
+    let mediaComplessiva = 0;
+    let count = 0;
+    if (media1 > 0) { mediaComplessiva += media1; count++; }
+    if (media2 > 0) { mediaComplessiva += media2; count++; }
 
-  for (let i = 0; i < etichette.length; i++) {
-    const mediaCategoria = medieAnno2[i]
+    if (count > 0) {
+      mediaComplessiva /= count;
+    }
 
-    if (mediaCategoria > migliorCategoria.media) {
+    if (mediaComplessiva > migliorCategoria.media) {
       migliorCategoria = {
-        nome: etichette[i],
-        media: mediaCategoria,
+        nome: etichetteUniche[i],
+        media: mediaComplessiva,
       }
     }
   }
-
   document.getElementById("categoria-migliorata").textContent =
     `${migliorCategoria.nome} (${migliorCategoria.media.toFixed(2)})`
 
-  // Trova la materia migliore
+  // Trova la materia migliore (tra tutti i voti di entrambi gli anni)
   let migliorMateria = { nome: "Nessuna", voto: 0 }
+  const tutteLeCategorie = [...categorieAnno1, ...categorieAnno2];
 
-  for (let i = 0; i < categorieAnno2.length; i++) {
-    const materieAnno2 = categorieAnno2[i].materie
-
-    for (let j = 0; j < materieAnno2.length; j++) {
-      const votoAnno2 = materieAnno2[j].voto
-
-      if (votoAnno2 !== null && votoAnno2 > migliorMateria.voto) {
-        migliorMateria = {
-          nome: materieAnno2[j].nome,
-          voto: votoAnno2,
-        }
+  tutteLeCategorie.forEach(categoria => {
+    categoria.materie.forEach(materia => {
+      if (materia.voto !== null && materia.voto > migliorMateria.voto) {
+        migliorMateria = { nome: materia.nome, voto: materia.voto };
       }
-    }
-  }
-
+    });
+  });
   document.getElementById("materia-migliorata").textContent = `${migliorMateria.nome} (${migliorMateria.voto})`
 }
 
@@ -1107,35 +1083,34 @@ function initializeMedieCategorieChart(data) {
   }
 
   // Calcola le medie per categoria per entrambi gli anni
-  const etichette = categorieAnno1.map((cat) => cat.nome)
+  const etichetteUniche = [
+    ...new Set([
+      ...categorieAnno1.map((c) => getNormalizedCategoryName(c.nome)),
+      ...categorieAnno2.map((c) => getNormalizedCategoryName(c.nome)),
+    ]),
+  ]
 
-  const medieAnno1 = categorieAnno1.map((cat) => {
-    let somma = 0
-    let count = 0
+  function getMediePerAnno(categorie, etichette) {
+    const medie = {}
+    etichette.forEach((e) => (medie[e] = { somma: 0, count: 0 }))
 
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        somma += materia.voto
-        count++
+    categorie.forEach((cat) => {
+      const normalizedName = getNormalizedCategoryName(cat.nome)
+      if (medie[normalizedName]) {
+        cat.materie.forEach((m) => {
+          if (m.voto !== null) {
+            medie[normalizedName].somma += m.voto
+            medie[normalizedName].count++
+          }
+        })
       }
     })
 
-    return count > 0 ? somma / count : 0
-  })
+    return etichette.map((e) => (medie[e].count > 0 ? medie[e].somma / medie[e].count : 0))
+  }
 
-  const medieAnno2 = categorieAnno2.map((cat) => {
-    let somma = 0
-    let count = 0
-
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        somma += materia.voto
-        count++
-      }
-    })
-
-    return count > 0 ? somma / count : 0
-  })
+  const medieAnno1 = getMediePerAnno(categorieAnno1, etichetteUniche)
+  const medieAnno2 = getMediePerAnno(categorieAnno2, etichetteUniche)
 
   // Grafico delle medie categorie per anni
   if (window.medieCategorieChartInstance) {
@@ -1145,7 +1120,7 @@ function initializeMedieCategorieChart(data) {
   window.medieCategorieChartInstance = new Chart(medieCategorieCtx, {
     type: "bar",
     data: {
-      labels: etichette,
+      labels: etichetteUniche,
       datasets: [
         {
           label: "Anno 1",
@@ -1314,40 +1289,39 @@ function initializeStatisticheSection(data) {
   }
 
   // Calcola le medie per categoria per entrambi gli anni
-  const etichette = categorieAnno1.map((cat) => cat.nome)
+  const etichetteUniche = [
+    ...new Set([
+      ...categorieAnno1.map((c) => getNormalizedCategoryName(c.nome)),
+      ...categorieAnno2.map((c) => getNormalizedCategoryName(c.nome)),
+    ]),
+  ]
 
-  const medieAnno1 = categorieAnno1.map((cat) => {
-    let somma = 0
-    let count = 0
+  function getMediePerAnno(categorie, etichette) {
+    const medie = {}
+    etichette.forEach((e) => (medie[e] = { somma: 0, count: 0 }))
 
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        somma += materia.voto
-        count++
+    categorie.forEach((cat) => {
+      const normalizedName = getNormalizedCategoryName(cat.nome)
+      if (medie[normalizedName]) {
+        cat.materie.forEach((m) => {
+          if (m.voto !== null) {
+            medie[normalizedName].somma += m.voto
+            medie[normalizedName].count++
+          }
+        })
       }
     })
 
-    return count > 0 ? somma / count : 0
-  })
+    return etichette.map((e) => (medie[e].count > 0 ? medie[e].somma / medie[e].count : 0))
+  }
 
-  const medieAnno2 = categorieAnno2.map((cat) => {
-    let somma = 0
-    let count = 0
-
-    cat.materie.forEach((materia) => {
-      if (materia.voto !== null) {
-        somma += materia.voto
-        count++
-      }
-    })
-
-    return count > 0 ? somma / count : 0
-  })
+  const medieAnno1 = getMediePerAnno(categorieAnno1, etichetteUniche)
+  const medieAnno2 = getMediePerAnno(categorieAnno2, etichetteUniche)
 
   window.andamentoChartInstance = new Chart(andamentoCtx, {
     type: "line",
     data: {
-      labels: etichette,
+      labels: etichetteUniche,
       datasets: [
         {
           label: "Anno 1",
@@ -1412,11 +1386,11 @@ function initializeStatisticheSection(data) {
   if (tabellaBody) {
     tabellaBody.innerHTML = ""
 
-    for (let i = 0; i < etichette.length; i++) {
+    for (let i = 0; i < etichetteUniche.length; i++) {
       const tr = document.createElement("tr")
 
       const tdCategoria = document.createElement("td")
-      tdCategoria.textContent = etichette[i]
+      tdCategoria.textContent = etichetteUniche[i]
 
       const tdMediaAnno1 = document.createElement("td")
       tdMediaAnno1.textContent = medieAnno1[i].toFixed(2)
