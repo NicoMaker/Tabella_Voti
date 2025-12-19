@@ -77,7 +77,7 @@
       "nome": "Advanced Web Dev",
       "materie": [
         { "nome": "Web Deployment", "voto": null },
-        { "nome": "Cross-platform development", "voto": 87 },
+        { "nome": "Cross-platform development", "voto": 82 },
         { "nome": "AI - Intelligenza Artificiale", "voto": null },
         { "nome": "Marketing Digitale", "voto": 67 }
       ]
