@@ -60,25 +60,25 @@
         { "nome": "Inglese Tecnico", "voto": null },
         { "nome": "Soft Skills 2", "voto": null },
         { "nome": "Lean e Digital transformation", "voto": null },
-        { "nome": "Budgeting ICT", "voto": null },
-        { "nome": "Sostenibilità", "voto": null }
+        { "nome": "Budgeting ICT", "voto": 70 },
+        { "nome": "Sostenibilità", "voto": 70 }
       ]
     },
     {
       "nome": "Web Development 2",
       "materie": [
         { "nome": "Architetture Software", "voto": null },
-        { "nome": "Database", "voto": null },
-        { "nome": "Single page applications", "voto": null },
+        { "nome": "Database", "voto": 90 },
+        { "nome": "Single page applications", "voto": 78 },
         { "nome": "Design Patterns", "voto": null }
       ]
     },
     {
       "nome": "Advanced Web Dev",
       "materie": [
-        { "nome": "Web Deployment", "voto": null },
+        { "nome": "Web Deployment", "voto": 100},
         { "nome": "Cross-platform development", "voto": 82 },
-        { "nome": "AI - Intelligenza Artificiale", "voto": null },
+        { "nome": "AI - Intelligenza Artificiale", "voto": 70 },
         { "nome": "Marketing Digitale", "voto": 67 }
       ]
     },
