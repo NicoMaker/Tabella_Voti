@@ -67,7 +67,7 @@
     {
       "nome": "Web Development 2",
       "materie": [
-        { "nome": "Architetture Software", "voto": null },
+        { "nome": "Architetture Software", "voto": 65 },
         { "nome": "Database", "voto": 90 },
         { "nome": "Single page applications", "voto": 78 },
         { "nome": "Design Patterns", "voto": null }
