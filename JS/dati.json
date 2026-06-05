@@ -42,15 +42,11 @@
     },
     {
       "nome": "Project Work anno 1",
-      "materie": [
-        { "nome": "Project Work", "voto": 84 }
-      ]
+      "materie": [{ "nome": "Project Work", "voto": 84 }]
     },
     {
       "nome": "Stage",
-      "materie": [
-        { "nome": "Stage", "voto": 60 }
-      ]
+      "materie": [{ "nome": "Stage", "voto": 60 }]
     }
   ],
   "categorie anno 2": [
@@ -76,7 +72,7 @@
     {
       "nome": "Advanced Web Dev",
       "materie": [
-        { "nome": "Web Deployment", "voto": 100},
+        { "nome": "Web Deployment", "voto": 100 },
         { "nome": "Cross-platform development", "voto": 82 },
         { "nome": "AI - Intelligenza Artificiale", "voto": 70 },
         { "nome": "Marketing Digitale", "voto": 67 }
@@ -84,15 +80,11 @@
     },
     {
       "nome": "Project Work anno 2",
-      "materie": [
-        { "nome": "Project Work", "voto": null }
-      ]
+      "materie": [{ "nome": "Project Work", "voto": null }]
     },
     {
       "nome": "Stage",
-      "materie": [
-        { "nome": "Stage", "voto": 84.60 }
-      ]
+      "materie": [{ "nome": "Stage", "voto": 84.6 }]
     }
   ]
 }
