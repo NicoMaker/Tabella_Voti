@@ -80,7 +80,7 @@
     },
     {
       "nome": "Project Work anno 2",
-      "materie": [{ "nome": "Project Work", "voto": null }]
+      "materie": [{ "nome": "Project Work", "voto": 94 }]
     },
     {
       "nome": "Stage",
