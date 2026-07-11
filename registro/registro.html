@@ -1,0 +1,1554 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro 2024FroT-Pn · Presenze e valutazioni</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="stylesregistro.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <p class="eyebrow">Registro digitale · Presenze e valutazioni</p>
+        <h1>Corso <span class="code">2024FroT‑Pn</span></h1>
+        <p class="sub">
+          Web development e interaction design · biennio ITS, Pordenone. Dati
+          aggiornati al <b id="mAgg"></b>.
+        </p>
+        <div class="stats" id="stats"></div>
+      </header>
+
+      <div class="tabs" role="tablist" aria-label="Viste del registro">
+        <button class="tab" role="tab" aria-selected="true" data-view="allievi">
+          Allievi
+        </button>
+        <button
+          class="tab"
+          role="tab"
+          aria-selected="false"
+          data-view="matrice"
+        >
+          Matrice voti
+        </button>
+        <button
+          class="tab"
+          role="tab"
+          aria-selected="false"
+          data-view="materie"
+        >
+          Materie
+        </button>
+      </div>
+
+      <!-- ============ VIEW: ALLIEVI ============ -->
+      <section class="view on" id="v-allievi">
+        <div class="toolbar">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-4-4" />
+            </svg>
+            <input
+              id="q"
+              type="search"
+              placeholder="Cerca un allievo…"
+              aria-label="Cerca un allievo"
+            />
+          </div>
+          <span class="hint"
+            >Clicca su una riga per aprire la scheda completa · clicca le
+            intestazioni per ordinare</span
+          >
+        </div>
+        <div class="card">
+          <table class="stab" id="stab">
+            <thead>
+              <tr>
+                <th data-k="name">Allievo <span class="arr"></span></th>
+                <th data-k="pct">Presenza <span class="arr"></span></th>
+                <th class="hide-m">Profilo per UF</th>
+                <th data-k="aula" style="text-align: right">
+                  Media aula <span class="arr"></span>
+                </th>
+                <th data-k="stage" style="text-align: right" class="hide-m">
+                  Stage <span class="arr"></span>
+                </th>
+                <th data-k="conStage" style="text-align: right">
+                  Media finale <span class="arr"></span>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="sbody"></tbody>
+          </table>
+        </div>
+        <div class="legend">
+          <span
+            ><b>Profilo per UF</b>: una tacca per ogni unità formativa, dalla
+            prima all'ultima —</span
+          >
+          <span class="strip"><i class="hi"></i></span> ≥ 90
+          <span class="strip"><i class="ok"></i></span> 75–89
+          <span class="strip"><i class="mid"></i></span> 60–74
+          <span class="strip"><i class="low"></i></span> &lt; 60
+        </div>
+      </section>
+
+      <!-- ============ VIEW: MATRICE ============ -->
+      <section class="view" id="v-matrice">
+        <div class="card mscroll" id="mwrap"></div>
+        <div class="legend">
+          <span class="gr hi">≥ 90</span><span class="gr ok">75–89</span
+          ><span class="gr mid">60–74</span><span class="gr low">&lt; 60</span
+          ><span class="gr na">— non previsto / no voto</span>
+          <span>Le colonne <b>Media</b> chiudono ogni unità formativa.</span>
+        </div>
+      </section>
+
+      <!-- ============ VIEW: MATERIE ============ -->
+      <section class="view" id="v-materie">
+        <p class="hint" style="margin: 4px 2px 14px">
+          Media di classe per ogni materia, calcolata sui voti numerici. La
+          barra è in scala 50–100; tra parentesi il numero di insufficienze.
+        </p>
+        <div class="subgrid" id="subgrid"></div>
+      </section>
+
+      <footer>
+        Rielaborazione moderna del foglio «Presenze_Valutazioni — FROT». I voti
+        testuali (<i>superato</i>, <i>da recuperare</i>, <i>no voto</i>,
+        <i>non previsto</i>) sono riportati come da registro originale e non
+        entrano nelle medie calcolate.
+      </footer>
+    </div>
+
+    <script id="data" type="application/json">
+      {
+        "meta": {
+          "course": "2024FroT-Pn",
+          "oreTot": 1984,
+          "oreMin": 1588,
+          "allievi": 25,
+          "aggiornato": "11 giugno 2026"
+        },
+        "areas": [
+          {
+            "name": "Competenze di base — Anno 1",
+            "year": 1,
+            "subjects": [
+              { "name": "Inglese tecnico 1", "teacher": "Parks" },
+              { "name": "Soft skills 1", "teacher": "Pasquini" },
+              {
+                "name": "Sicurezza e prevenzione — generale",
+                "teacher": "Rigo"
+              },
+              { "name": "Informatica giuridica", "teacher": "Piva" },
+              {
+                "name": "Sicurezza e prevenzione — rischio basso",
+                "teacher": "Rigo"
+              }
+            ]
+          },
+          {
+            "name": "IT Fundamentals",
+            "year": 1,
+            "subjects": [
+              { "name": "Sistemi operativi: Windows", "teacher": "Gobbo" },
+              { "name": "Sistemi operativi: Linux", "teacher": "Gobbo" },
+              { "name": "Networking", "teacher": "Gobbo" },
+              { "name": "Containers", "teacher": "Gobbo" },
+              { "name": "Cybersecurity", "teacher": "Gobbo" }
+            ]
+          },
+          {
+            "name": "Web Development I",
+            "year": 1,
+            "subjects": [
+              {
+                "name": "Fondamenti di programmazione",
+                "teacher": "Venturini"
+              },
+              { "name": "Linguaggi web", "teacher": "Giacomazzi" },
+              { "name": "Sviluppo web server side", "teacher": "Betto" },
+              { "name": "JavaScript", "teacher": "Arciero" },
+              { "name": "Sviluppo distribuito", "teacher": "Betto" },
+              { "name": "Web content management", "teacher": "Piccin" }
+            ]
+          },
+          {
+            "name": "Interaction Design",
+            "year": 1,
+            "subjects": [
+              { "name": "User experience design", "teacher": "Maraspin" },
+              { "name": "Psicologia per il design", "teacher": "Fantin" },
+              {
+                "name": "Architettura dell'informazione",
+                "teacher": "Valcher"
+              },
+              { "name": "Prototipazione", "teacher": "Fantin" },
+              { "name": "Accessibilità e usabilità", "teacher": "Ghiuzan" },
+              { "name": "Copywriting e presentazioni", "teacher": "Braida" },
+              { "name": "Grafica digitale", "teacher": "Fantin" }
+            ]
+          },
+          {
+            "name": "Project Work — Anno 1",
+            "year": 1,
+            "subjects": [{ "name": "Project Work 1", "teacher": "Betto" }]
+          },
+          {
+            "name": "Competenze di base — Anno 2",
+            "year": 2,
+            "subjects": [
+              { "name": "Inglese tecnico 2", "teacher": "Parks · 35h" },
+              { "name": "Soft skills 2", "teacher": "Iob · 12h" },
+              {
+                "name": "Lean e digital transformation",
+                "teacher": "Esposito · 16h"
+              },
+              { "name": "Budgeting ICT", "teacher": "Papini · 12h" },
+              { "name": "Sostenibilità", "teacher": "Papini · 8h" }
+            ]
+          },
+          {
+            "name": "Web Development II",
+            "year": 2,
+            "subjects": [
+              { "name": "Architetture software", "teacher": "Betto · 40h" },
+              { "name": "Database", "teacher": "Gobbo · 44h" },
+              {
+                "name": "Single page applications",
+                "teacher": "Giacomazzi · 64h"
+              },
+              { "name": "Design patterns", "teacher": "Baruzzo · 24h" }
+            ]
+          },
+          {
+            "name": "Advanced Web Dev",
+            "year": 2,
+            "subjects": [
+              { "name": "Web deployment", "teacher": "Piccin · 34h" },
+              {
+                "name": "Cross-platform development",
+                "teacher": "Venir · 68h"
+              },
+              {
+                "name": "AI — Intelligenza artificiale",
+                "teacher": "Papini · 32h"
+              },
+              { "name": "Marketing digitale", "teacher": "Serafini · 32h" }
+            ]
+          },
+          {
+            "name": "Project Work — Anno 2",
+            "year": 2,
+            "subjects": [
+              {
+                "name": "Project Work 2",
+                "teacher": "Betto · 40h / Giacomazzi · 24h"
+              }
+            ]
+          }
+        ],
+        "students": [
+          {
+            "id": "1311",
+            "name": "Bytyqi Adrion",
+            "stato": "ok",
+            "ore": 1811.4,
+            "pct": 91.3,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 78.0, "grades": [70.0, 100.0, 68.0, 60.0, 92.0] },
+              {
+                "media": 88.0,
+                "grades": [80.0, 95.0, 90.0, 90.0, "no voto", 85.0]
+              },
+              {
+                "media": 83.0,
+                "grades": [73.0, 80.0, 86.0, 88.0, 100.0, 75.0, 80.0]
+              },
+              { "media": 75.0, "grades": [75.0] },
+              {
+                "media": 77.0,
+                "grades": [100.0, "superato", "non previsto", 65.0, 65.0]
+              },
+              { "media": 81.0, "grades": [70.0, 94.0, 71.0, 89.0] },
+              { "media": 79.0, "grades": [93.0, 64.0, 65.0, 93.0] },
+              { "media": 84.0, "grades": [84.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 81.0,
+              "base": 89.0,
+              "aula": 83.0,
+              "stage": 64.0,
+              "stage1": 50.0,
+              "stage2": 77.0,
+              "percorso": 83.0,
+              "conStage": 81.0
+            }
+          },
+          {
+            "id": "1225",
+            "name": "Cammarata Ludovico",
+            "stato": "ok",
+            "ore": 1756.9,
+            "pct": 88.55,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 98.0, "grades": [94.0, 100.0, 95.0, 100.0, 100.0] },
+              {
+                "media": 97.0,
+                "grades": [90.0, 100.0, 100.0, 100.0, "no voto", 94.0]
+              },
+              {
+                "media": 85.0,
+                "grades": [90.0, 70.0, 85.0, 90.0, 80.0, 90.0, 90.0]
+              },
+              { "media": 87.0, "grades": [87.0] },
+              {
+                "media": 81.0,
+                "grades": [100.0, "superato", "non previsto", 72.0, 72.0]
+              },
+              { "media": 89.0, "grades": [100.0, 95.0, 71.0, 88.0] },
+              { "media": 91.0, "grades": [100.0, 100.0, 72.0, 90.0] },
+              { "media": 100.0, "grades": [100.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 92.0,
+              "base": 91.0,
+              "aula": 92.0,
+              "stage": 67.0,
+              "stage1": 53.0,
+              "stage2": 80.0,
+              "percorso": 92.0,
+              "conStage": 90.0
+            }
+          },
+          {
+            "id": "1226",
+            "name": "Castellarin Damiano",
+            "stato": "ok",
+            "ore": 1911.5,
+            "pct": 96.35,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 84.0, "grades": [83.0, 95.0, 69.0, 85.0, 88.0] },
+              {
+                "media": 82.0,
+                "grades": [80.0, 70.0, 84.0, 85.0, "no voto", 91.0]
+              },
+              {
+                "media": 76.0,
+                "grades": [95.0, 75.0, 80.0, 65.0, 60.0, 65.0, 90.0]
+              },
+              { "media": 70.0, "grades": [70.0] },
+              {
+                "media": 92.0,
+                "grades": [100.0, "superato", "non previsto", 88.0, 88.0]
+              },
+              { "media": 83.0, "grades": [70.0, 95.0, 75.0, 91.0] },
+              { "media": 83.0, "grades": [93.0, 60.0, 88.0, 90.0] },
+              { "media": 84.0, "grades": [84.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 80.0,
+              "base": 96.0,
+              "aula": 84.0,
+              "stage": 97.0,
+              "stage1": 100.0,
+              "stage2": 93.0,
+              "percorso": 84.0,
+              "conStage": 85.0
+            }
+          },
+          {
+            "id": "1227",
+            "name": "Celant Matteo",
+            "stato": "ok",
+            "ore": 1763.0,
+            "pct": 88.86,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 79.0, "grades": [71.0, 91.0, 64.0, 80.0, 88.0] },
+              {
+                "media": 79.0,
+                "grades": [75.0, 55.0, 95.0, 80.0, "no voto", 88.0]
+              },
+              {
+                "media": 74.0,
+                "grades": [90.0, 70.0, 81.0, 70.0, 50.0, 77.0, 80.0]
+              },
+              { "media": 70.0, "grades": [70.0] },
+              {
+                "media": 80.0,
+                "grades": [100.0, "superato", "non previsto", 70.0, 70.0]
+              },
+              { "media": 78.0, "grades": [70.0, 88.0, 58.0, 95.0] },
+              { "media": 60.0, "grades": [87.0, 53.0, 70.0, 30.0] },
+              { "media": 84.0, "grades": [84.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 75.0,
+              "base": 90.0,
+              "aula": 78.0,
+              "stage": 80.0,
+              "stage1": 70.0,
+              "stage2": 90.0,
+              "percorso": 78.0,
+              "conStage": 78.0
+            }
+          },
+          {
+            "id": "1228",
+            "name": "Da Ros Damiano",
+            "stato": "ok",
+            "ore": 1841.5,
+            "pct": 92.82,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 89.0, "grades": [73.0, 100.0, 85.0, 95.0, 92.0] },
+              {
+                "media": 86.0,
+                "grades": [90.0, 90.0, 90.0, 80.0, "no voto", 82.0]
+              },
+              {
+                "media": 79.0,
+                "grades": [75.0, 90.0, 86.0, 85.0, 60.0, 85.0, 70.0]
+              },
+              { "media": 86.0, "grades": [86.0] },
+              {
+                "media": 92.0,
+                "grades": [100.0, "superato", "non previsto", 88.0, 88.0]
+              },
+              { "media": 89.0, "grades": [93.0, 98.0, 75.0, 89.0] },
+              { "media": 82.0, "grades": [90.0, 56.0, 88.0, 93.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 87.0,
+              "base": 96.0,
+              "aula": 89.0,
+              "stage": 78.0,
+              "stage1": 75.0,
+              "stage2": 80.0,
+              "percorso": 89.0,
+              "conStage": 88.0
+            }
+          },
+          {
+            "id": "1229",
+            "name": "Drigo Samuele",
+            "stato": "ok",
+            "ore": 1881.9,
+            "pct": 94.85,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 97.0, "grades": [100.0, 100.0, 95.0, 90.0, 100.0] },
+              {
+                "media": 90.0,
+                "grades": [80.0, 85.0, 91.0, 100.0, "no voto", 94.0]
+              },
+              {
+                "media": 84.0,
+                "grades": [87.0, 90.0, 84.0, 90.0, 78.0, 80.0, 80.0]
+              },
+              { "media": 87.0, "grades": [87.0] },
+              {
+                "media": 92.0,
+                "grades": [100.0, "superato", "non previsto", 88.0, 88.0]
+              },
+              { "media": 84.0, "grades": [100.0, 89.0, 67.0, 80.0] },
+              { "media": 83.0, "grades": [100.0, 54.0, 88.0, 88.0] },
+              { "media": 80.0, "grades": [80.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 86.0,
+              "base": 96.0,
+              "aula": 89.0,
+              "stage": 97.0,
+              "stage1": 100.0,
+              "stage2": 94.0,
+              "percorso": 89.0,
+              "conStage": 89.0
+            }
+          },
+          {
+            "id": "1230",
+            "name": "Fnaiqi Sara",
+            "stato": "ok",
+            "ore": 1793.9,
+            "pct": 90.42,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 90.0, "grades": [84.0, 100.0, 80.0, 85.0, 100.0] },
+              {
+                "media": 80.0,
+                "grades": [80.0, 60.0, 95.0, 75.0, "no voto", 88.0]
+              },
+              {
+                "media": 84.0,
+                "grades": [97.0, 80.0, 77.0, 88.0, 78.0, 89.0, 80.0]
+              },
+              { "media": 80.0, "grades": [80.0] },
+              {
+                "media": 77.0,
+                "grades": [100.0, "superato", "non previsto", 65.0, 65.0]
+              },
+              { "media": 80.0, "grades": [95.0, 88.0, 40.0, 97.0] },
+              { "media": 78.0, "grades": [95.0, 59.0, 65.0, 92.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "F",
+            "tot": {
+              "tecnico": 84.0,
+              "base": 89.0,
+              "aula": 85.0,
+              "stage": 76.0,
+              "stage1": 60.0,
+              "stage2": 91.0,
+              "percorso": 85.0,
+              "conStage": 84.0
+            }
+          },
+          {
+            "id": "1231",
+            "name": "Galante Matteo",
+            "stato": "ok",
+            "ore": 1842.2,
+            "pct": 92.85,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 78.0, "grades": [63.0, 86.0, 63.0, 85.0, 92.0] },
+              {
+                "media": 74.0,
+                "grades": [80.0, 78.0, 90.0, 70.0, "no voto", 50.0]
+              },
+              {
+                "media": 70.0,
+                "grades": [73.0, 60.0, 85.0, 60.0, 57.0, 74.0, 80.0]
+              },
+              { "media": 62.0, "grades": [62.0] },
+              {
+                "media": 93.0,
+                "grades": [100.0, "superato", "non previsto", 90.0, 90.0]
+              },
+              { "media": 73.0, "grades": [65.0, 79.0, 64.0, 82.0] },
+              { "media": 77.0, "grades": [92.0, 40.0, 90.0, 87.0] },
+              { "media": 90.0, "grades": [90.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 75.0,
+              "base": 97.0,
+              "aula": 80.0,
+              "stage": 68.0,
+              "stage1": 60.0,
+              "stage2": 75.0,
+              "percorso": 80.0,
+              "conStage": 79.0
+            }
+          },
+          {
+            "id": "1232",
+            "name": "Gasparutti Aurora",
+            "stato": "ok",
+            "ore": 1925.3,
+            "pct": 97.04,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 91.0, "grades": [78.0, 95.0, 92.0, 90.0, 100.0] },
+              {
+                "media": 85.0,
+                "grades": [80.0, 85.0, 96.0, 75.0, "no voto", 91.0]
+              },
+              {
+                "media": 86.0,
+                "grades": [98.0, 80.0, 85.0, 90.0, 80.0, 89.0, 80.0]
+              },
+              { "media": 86.0, "grades": [86.0] },
+              {
+                "media": 83.0,
+                "grades": [100.0, "superato", "non previsto", 75.0, 75.0]
+              },
+              { "media": 78.0, "grades": [95.0, 70.0, 67.0, 80.0] },
+              { "media": 82.0, "grades": [97.0, 66.0, 75.0, 90.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "F",
+            "tot": {
+              "tecnico": 87.0,
+              "base": 92.0,
+              "aula": 88.0,
+              "stage": 96.0,
+              "stage1": 100.0,
+              "stage2": 91.0,
+              "percorso": 88.0,
+              "conStage": 89.0
+            }
+          },
+          {
+            "id": "1233",
+            "name": "Gobbo Nicolo`",
+            "stato": "ok",
+            "ore": 1728.8,
+            "pct": 87.13,
+            "areas": [
+              {
+                "media": 70.0,
+                "grades": [70.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 92.0, "grades": [77.0, 100.0, 81.0, 100.0, 100.0] },
+              {
+                "media": 90.0,
+                "grades": [80.0, 87.0, 97.0, 90.0, "no voto", 97.0]
+              },
+              {
+                "media": 85.0,
+                "grades": [91.0, 80.0, 77.0, 88.0, 90.0, 90.0, 80.0]
+              },
+              { "media": 86.0, "grades": [86.0] },
+              {
+                "media": 81.0,
+                "grades": [100.0, "superato", "non previsto", 72.0, 72.0]
+              },
+              { "media": 80.0, "grades": [93.0, 84.0, 54.0, 89.0] },
+              { "media": 86.0, "grades": [95.0, 91.0, 72.0, 87.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 88.0,
+              "base": 76.0,
+              "aula": 85.0,
+              "stage": 74.0,
+              "stage1": 60.0,
+              "stage2": 87.0,
+              "percorso": 85.0,
+              "conStage": 84.0
+            }
+          },
+          {
+            "id": "1234",
+            "name": "Longon Kawe",
+            "stato": "ok",
+            "ore": 1630.7,
+            "pct": 82.19,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 90.0, "grades": [95.0, 100.0, 87.0, 75.0, 92.0] },
+              {
+                "media": 86.0,
+                "grades": [90.0, 90.0, 83.0, 75.0, "no voto", 91.0]
+              },
+              {
+                "media": 84.0,
+                "grades": [86.0, 85.0, 71.0, 83.0, 82.0, 89.0, 90.0]
+              },
+              { "media": 87.0, "grades": [87.0] },
+              {
+                "media": 81.0,
+                "grades": [100.0, "superato", "non previsto", 72.0, 72.0]
+              },
+              { "media": 79.0, "grades": [100.0, 87.0, 35.0, 93.0] },
+              { "media": 86.0, "grades": [94.0, 81.0, 72.0, 95.0] },
+              { "media": 94.0, "grades": [94.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 87.0,
+              "base": 91.0,
+              "aula": 87.0,
+              "stage": 77.0,
+              "stage1": 60.0,
+              "stage2": 94.0,
+              "percorso": 87.0,
+              "conStage": 86.0
+            }
+          },
+          {
+            "id": "1235",
+            "name": "Mantovani Gaia",
+            "stato": "ok",
+            "ore": 1884.1,
+            "pct": 94.96,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 78.0, "grades": [62.0, 95.0, 77.0, 60.0, 96.0] },
+              {
+                "media": 81.0,
+                "grades": [80.0, 60.0, 82.0, 90.0, "no voto", 94.0]
+              },
+              {
+                "media": 82.0,
+                "grades": [80.0, 80.0, 80.0, 90.0, 65.0, 100.0, 80.0]
+              },
+              { "media": 85.0, "grades": [85.0] },
+              {
+                "media": 82.0,
+                "grades": [70.0, "superato", "non previsto", 88.0, 88.0]
+              },
+              { "media": 81.0, "grades": [90.0, 87.0, 51.0, 96.0] },
+              { "media": 64.0, "grades": [40.0, 30.0, 88.0, 97.0] },
+              { "media": 94.0, "grades": [94.0] }
+            ],
+            "gender": "F",
+            "tot": {
+              "tecnico": 81.0,
+              "base": 91.0,
+              "aula": 83.0,
+              "stage": 91.0,
+              "stage1": 97.0,
+              "stage2": 84.0,
+              "percorso": 83.0,
+              "conStage": 84.0
+            }
+          },
+          {
+            "id": "1236",
+            "name": "Marano Nicola",
+            "stato": "ok",
+            "ore": 1888.6,
+            "pct": 95.19,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 90.0, "grades": [91.0, 95.0, 79.0, 95.0, 88.0] },
+              {
+                "media": 86.0,
+                "grades": [85.0, 70.0, 90.0, 100.0, "no voto", 85.0]
+              },
+              {
+                "media": 77.0,
+                "grades": [87.0, 75.0, 82.0, 60.0, 75.0, 83.0, 80.0]
+              },
+              { "media": 84.0, "grades": [84.0] },
+              {
+                "media": 73.0,
+                "grades": [80.0, "superato", "non previsto", 70.0, 70.0]
+              },
+              { "media": 76.0, "grades": [65.0, 90.0, 78.0, 70.0] },
+              { "media": 80.0, "grades": [100.0, 82.0, 70.0, 67.0] },
+              { "media": 94.0, "grades": [94.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 84.0,
+              "base": 87.0,
+              "aula": 84.0,
+              "stage": 78.0,
+              "stage1": 71.0,
+              "stage2": 85.0,
+              "percorso": 84.0,
+              "conStage": 84.0
+            }
+          },
+          {
+            "id": "1305",
+            "name": "Mascherin Denis",
+            "stato": "ok",
+            "ore": 1964.3,
+            "pct": 99.0,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 75.0, "grades": [63.0, 77.0, 64.0, 85.0, 84.0] },
+              {
+                "media": 78.0,
+                "grades": [90.0, 65.0, 91.0, 70.0, "no voto", 76.0]
+              },
+              {
+                "media": 69.0,
+                "grades": [80.0, 55.0, 82.0, 55.0, 60.0, 82.0, 70.0]
+              },
+              { "media": 70.0, "grades": [70.0] },
+              {
+                "media": 93.0,
+                "grades": [100.0, "superato", "non previsto", 90.0, 90.0]
+              },
+              { "media": 75.0, "grades": [65.0, 78.0, 74.0, 82.0] },
+              { "media": 73.0, "grades": [93.0, 38.0, 90.0, 72.0] },
+              { "media": 92.0, "grades": [92.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 76.0,
+              "base": 97.0,
+              "aula": 81.0,
+              "stage": 90.0,
+              "stage1": 95.0,
+              "stage2": 85.0,
+              "percorso": 81.0,
+              "conStage": 82.0
+            }
+          },
+          {
+            "id": "1237",
+            "name": "Piccolo Zawadi Emilia",
+            "stato": "ok",
+            "ore": 1727.5,
+            "pct": 87.07,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 83.0, "grades": [40.0, 95.0, 100.0, 85.0, 96.0] },
+              {
+                "media": 80.0,
+                "grades": [85.0, 78.0, 86.0, 65.0, "no voto", 87.0]
+              },
+              {
+                "media": 77.0,
+                "grades": [94.0, 65.0, 79.0, 75.0, 80.0, 89.0, 60.0]
+              },
+              { "media": 86.0, "grades": [86.0] },
+              {
+                "media": 80.0,
+                "grades": [100.0, "superato", "non previsto", 70.0, 70.0]
+              },
+              { "media": 72.0, "grades": [95.0, 64.0, 40.0, 89.0] },
+              { "media": 71.0, "grades": [93.0, 35.0, 70.0, 85.0] },
+              { "media": 96.0, "grades": [96.0] }
+            ],
+            "gender": "F",
+            "tot": {
+              "tecnico": 81.0,
+              "base": 90.0,
+              "aula": 83.0,
+              "stage": 98.0,
+              "stage1": 100.0,
+              "stage2": 96.0,
+              "percorso": 83.0,
+              "conStage": 84.0
+            }
+          },
+          {
+            "id": "1238",
+            "name": "Prevarin Marco",
+            "stato": "ok",
+            "ore": 1846.3,
+            "pct": 93.06,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 90.0, "grades": [96.0, 100.0, 99.0, 55.0, 100.0] },
+              {
+                "media": 89.0,
+                "grades": [90.0, 80.0, 86.0, 100.0, "no voto", 91.0]
+              },
+              {
+                "media": 82.0,
+                "grades": [100.0, 70.0, 54.0, 90.0, 78.0, 99.0, 80.0]
+              },
+              { "media": 87.0, "grades": [87.0] },
+              {
+                "media": 73.0,
+                "grades": [70.0, "superato", "non previsto", 75.0, 75.0]
+              },
+              { "media": 90.0, "grades": [100.0, 92.0, 78.0, 91.0] },
+              { "media": 84.0, "grades": [93.0, 79.0, 75.0, 88.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 89.0,
+              "base": 87.0,
+              "aula": 88.0,
+              "stage": 88.0,
+              "stage1": 75.0,
+              "stage2": 100.0,
+              "percorso": 88.0,
+              "conStage": 88.0
+            }
+          },
+          {
+            "id": "1239",
+            "name": "Quaino Giulia",
+            "stato": "ok",
+            "ore": 1952.3,
+            "pct": 98.4,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 94.0, "grades": [87.0, 95.0, 96.0, 90.0, 100.0] },
+              {
+                "media": 87.0,
+                "grades": [90.0, 90.0, 95.0, 70.0, "no voto", 88.0]
+              },
+              {
+                "media": 88.0,
+                "grades": [100.0, 80.0, 82.0, 90.0, 85.0, 90.0, 90.0]
+              },
+              { "media": 80.0, "grades": [80.0] },
+              {
+                "media": 83.0,
+                "grades": [100.0, "superato", "non previsto", 75.0, 75.0]
+              },
+              { "media": 79.0, "grades": [95.0, 68.0, 72.0, 80.0] },
+              { "media": 80.0, "grades": [100.0, 53.0, 75.0, 92.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "F",
+            "tot": {
+              "tecnico": 87.0,
+              "base": 92.0,
+              "aula": 88.0,
+              "stage": 100.0,
+              "stage1": 100.0,
+              "stage2": 99.0,
+              "percorso": 88.0,
+              "conStage": 89.0
+            }
+          },
+          {
+            "id": "1240",
+            "name": "Rossi Valentina",
+            "stato": "ok",
+            "ore": 1801.8,
+            "pct": 90.81,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 81.0, "grades": [80.0, 100.0, 82.0, 70.0, 72.0] },
+              {
+                "media": 82.0,
+                "grades": [75.0, 67.0, 94.0, 90.0, "no voto", 82.0]
+              },
+              {
+                "media": 82.0,
+                "grades": [80.0, 85.0, 85.0, 93.0, 65.0, 85.0, 80.0]
+              },
+              { "media": 83.0, "grades": [83.0] },
+              {
+                "media": 92.0,
+                "grades": [100.0, "superato", "non previsto", 88.0, 88.0]
+              },
+              { "media": 77.0, "grades": [90.0, 81.0, 45.0, 91.0] },
+              { "media": 91.0, "grades": [97.0, 84.0, 88.0, 95.0] },
+              { "media": 94.0, "grades": [94.0] }
+            ],
+            "gender": "F",
+            "tot": {
+              "tecnico": 84.0,
+              "base": 96.0,
+              "aula": 87.0,
+              "stage": 90.0,
+              "stage1": 90.0,
+              "stage2": 89.0,
+              "percorso": 87.0,
+              "conStage": 87.0
+            }
+          },
+          {
+            "id": "1241",
+            "name": "Segato Marco",
+            "stato": "ok",
+            "ore": 1868.3,
+            "pct": 94.17,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 98.0, "grades": [100.0, 95.0, 99.0, 95.0, 100.0] },
+              {
+                "media": 93.0,
+                "grades": [80.0, 100.0, 100.0, 95.0, "no voto", 88.0]
+              },
+              {
+                "media": 90.0,
+                "grades": [95.0, 80.0, 91.0, 85.0, 100.0, 90.0, 90.0]
+              },
+              { "media": 87.0, "grades": [87.0] },
+              {
+                "media": 83.0,
+                "grades": [100.0, "superato", "non previsto", 75.0, 75.0]
+              },
+              { "media": 90.0, "grades": [100.0, 96.0, 82.0, 82.0] },
+              { "media": 90.0, "grades": [100.0, 94.0, 75.0, 92.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 92.0,
+              "base": 92.0,
+              "aula": 92.0,
+              "stage": 100.0,
+              "stage1": 100.0,
+              "stage2": 100.0,
+              "percorso": 92.0,
+              "conStage": 93.0
+            }
+          },
+          {
+            "id": "1242",
+            "name": "Serraino Brayan Camilo",
+            "stato": "ok",
+            "ore": 1624.1,
+            "pct": 81.86,
+            "areas": [
+              {
+                "media": 70.0,
+                "grades": [
+                  70.0,
+                  "no voto",
+                  "superato",
+                  "da recuperare",
+                  "superato"
+                ]
+              },
+              { "media": 78.0, "grades": [72.0, 100.0, 94.0, 35.0, 88.0] },
+              {
+                "media": 54.0,
+                "grades": [30.0, 30.0, 93.0, 30.0, "no voto", 88.0]
+              },
+              {
+                "media": 67.0,
+                "grades": [56.0, 65.0, 79.0, 65.0, 53.0, 88.0, 60.0]
+              },
+              { "media": 73.0, "grades": [73.0] },
+              {
+                "media": 67.0,
+                "grades": [60.0, "superato", "non previsto", 70.0, 70.0]
+              },
+              { "media": 65.0, "grades": [70.0, 75.0, 40.0, 75.0] },
+              { "media": 69.0, "grades": [85.0, 46.0, 70.0, 75.0] },
+              { "media": 84.0, "grades": [84.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 70.0,
+              "base": 69.0,
+              "aula": 70.0,
+              "stage": 99.0,
+              "stage1": 100.0,
+              "stage2": 98.0,
+              "percorso": 70.0,
+              "conStage": 73.0
+            }
+          },
+          {
+            "id": "1309",
+            "name": "Tolotti Alessia",
+            "stato": "ok",
+            "ore": 1834.0,
+            "pct": 92.44,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 82.0, "grades": [71.0, 95.0, 66.0, 80.0, 96.0] },
+              {
+                "media": 87.0,
+                "grades": [80.0, 90.0, 89.0, 80.0, "no voto", 94.0]
+              },
+              {
+                "media": 86.0,
+                "grades": [100.0, 90.0, 84.0, 93.0, 60.0, 94.0, 80.0]
+              },
+              { "media": 86.0, "grades": [86.0] },
+              {
+                "media": 92.0,
+                "grades": [100.0, "superato", "non previsto", 88.0, 88.0]
+              },
+              { "media": 88.0, "grades": [90.0, 89.0, 77.0, 97.0] },
+              { "media": 86.0, "grades": [93.0, 64.0, 88.0, 97.0] },
+              { "media": 94.0, "grades": [94.0] }
+            ],
+            "gender": "F",
+            "tot": {
+              "tecnico": 87.0,
+              "base": 96.0,
+              "aula": 89.0,
+              "stage": 97.0,
+              "stage1": 100.0,
+              "stage2": 93.0,
+              "percorso": 89.0,
+              "conStage": 90.0
+            }
+          },
+          {
+            "id": "1243",
+            "name": "Villalta Luca",
+            "stato": "ok",
+            "ore": 1829.0,
+            "pct": 92.18,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 78.0, "grades": [76.0, 91.0, 68.0, 65.0, 88.0] },
+              {
+                "media": 79.0,
+                "grades": [80.0, 85.0, 88.0, 70.0, "no voto", 70.0]
+              },
+              {
+                "media": 77.0,
+                "grades": [88.0, 75.0, 89.0, 78.0, 58.0, 84.0, 70.0]
+              },
+              { "media": 75.0, "grades": [75.0] },
+              {
+                "media": 93.0,
+                "grades": [100.0, "superato", "non previsto", 90.0, 90.0]
+              },
+              { "media": 77.0, "grades": [65.0, 90.0, 70.0, 83.0] },
+              { "media": 82.0, "grades": [98.0, 51.0, 90.0, 88.0] },
+              { "media": 94.0, "grades": [94.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 80.0,
+              "base": 97.0,
+              "aula": 84.0,
+              "stage": 66.0,
+              "stage1": 50.0,
+              "stage2": 82.0,
+              "percorso": 84.0,
+              "conStage": 82.0
+            }
+          },
+          {
+            "id": "1244",
+            "name": "Zanchetta Emanuele",
+            "stato": "ok",
+            "ore": 1735.2,
+            "pct": 87.46,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 95.0, "grades": [100.0, 100.0, 84.0, 90.0, 100.0] },
+              {
+                "media": 88.0,
+                "grades": [80.0, 90.0, 93.0, 90.0, "no voto", 85.0]
+              },
+              {
+                "media": 83.0,
+                "grades": [72.0, 95.0, 81.0, 98.0, 65.0, 90.0, 80.0]
+              },
+              { "media": 83.0, "grades": [83.0] },
+              {
+                "media": 83.0,
+                "grades": [100.0, "superato", "non previsto", 75.0, 75.0]
+              },
+              { "media": 78.0, "grades": [93.0, 81.0, 46.0, 93.0] },
+              { "media": 88.0, "grades": [96.0, 83.0, 75.0, 97.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 88.0,
+              "base": 92.0,
+              "aula": 88.0,
+              "stage": 91.0,
+              "stage1": 90.0,
+              "stage2": 92.0,
+              "percorso": 88.0,
+              "conStage": 89.0
+            }
+          },
+          {
+            "id": "1245",
+            "name": "Zoccarato Simone",
+            "stato": "ok",
+            "ore": 1922.1,
+            "pct": 96.88,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 81.0, "grades": [63.0, 95.0, 66.0, 85.0, 96.0] },
+              {
+                "media": 79.0,
+                "grades": [90.0, 60.0, 77.0, 85.0, "no voto", 82.0]
+              },
+              {
+                "media": 77.0,
+                "grades": [75.0, 85.0, 82.0, 80.0, 55.0, 94.0, 70.0]
+              },
+              { "media": 83.0, "grades": [83.0] },
+              {
+                "media": 81.0,
+                "grades": [100.0, "superato", "non previsto", 72.0, 72.0]
+              },
+              { "media": 72.0, "grades": [90.0, 66.0, 59.0, 72.0] },
+              { "media": 73.0, "grades": [100.0, 33.0, 72.0, 87.0] },
+              { "media": 94.0, "grades": [94.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 80.0,
+              "base": 91.0,
+              "aula": 82.0,
+              "stage": 68.0,
+              "stage1": 60.0,
+              "stage2": 75.0,
+              "percorso": 82.0,
+              "conStage": 81.0
+            }
+          },
+          {
+            "id": "1246",
+            "name": "Zol Giovanni",
+            "stato": "ok",
+            "ore": 1876.2,
+            "pct": 94.56,
+            "areas": [
+              {
+                "media": 100.0,
+                "grades": [100.0, "no voto", "superato", "superato", "superato"]
+              },
+              { "media": 91.0, "grades": [91.0, 100.0, 82.0, 85.0, 96.0] },
+              {
+                "media": 86.0,
+                "grades": [80.0, 80.0, 100.0, 95.0, "no voto", 76.0]
+              },
+              {
+                "media": 80.0,
+                "grades": [97.0, 80.0, 83.0, 83.0, 60.0, 90.0, 70.0]
+              },
+              { "media": 87.0, "grades": [87.0] },
+              {
+                "media": 92.0,
+                "grades": [100.0, "superato", "non previsto", 88.0, 88.0]
+              },
+              { "media": 85.0, "grades": [93.0, 96.0, 64.0, 87.0] },
+              { "media": 94.0, "grades": [93.0, 95.0, 88.0, 99.0] },
+              { "media": 98.0, "grades": [98.0] }
+            ],
+            "gender": "M",
+            "tot": {
+              "tecnico": 89.0,
+              "base": 96.0,
+              "aula": 90.0,
+              "stage": 94.0,
+              "stage1": 100.0,
+              "stage2": 87.0,
+              "percorso": 90.0,
+              "conStage": 91.0
+            }
+          }
+        ]
+      }
+    </script>
+    <script>
+      const D = JSON.parse(document.getElementById("data").textContent);
+      const fmt = (v) =>
+        v == null ? "—" : (Math.round(v * 10) / 10).toLocaleString("it-IT");
+      const cls = (v) => {
+        if (typeof v === "number")
+          return v >= 90 ? "hi" : v >= 75 ? "ok" : v >= 60 ? "mid" : "low";
+        if (v === "superato") return "sup";
+        if (v === "da recuperare") return "rec";
+        return "na";
+      };
+      const chip = (v) => {
+        if (v == null) return '<span class="gr na">—</span>';
+        if (typeof v === "number")
+          return `<span class="gr ${cls(v)}">${fmt(v)}</span>`;
+        if (v === "superato") return '<span class="gr hi txt">superato</span>';
+        if (v === "da recuperare")
+          return '<span class="gr low txt">da recuperare</span>';
+        return `<span class="gr na txt">${v}</span>`;
+      };
+
+      /* ---------- header stats ---------- */
+      document.getElementById("mAgg").textContent = D.meta.aggiornato;
+      const nums = (a) => a.filter((x) => typeof x === "number");
+      const avg = (a) => {
+        const n = nums(a);
+        return n.length ? n.reduce((s, x) => s + x, 0) / n.length : null;
+      };
+      const classAvg = avg(D.students.map((s) => s.tot.conStage));
+      const presAvg = avg(D.students.map((s) => s.pct));
+      document.getElementById("stats").innerHTML = [
+        [D.meta.allievi, "allievi iscritti"],
+        [
+          D.meta.oreTot.toLocaleString("it-IT") + " h",
+          "ore di corso (" +
+            D.meta.oreMin.toLocaleString("it-IT") +
+            " h minime)",
+        ],
+        [fmt(presAvg) + "%", "presenza media di classe"],
+        [fmt(classAvg), "media finale di classe (con stage)"],
+      ]
+        .map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`)
+        .join("");
+
+      /* ---------- tabs ---------- */
+      document.querySelectorAll(".tab").forEach((t) =>
+        t.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab")
+            .forEach((x) => x.setAttribute("aria-selected", x === t));
+          document
+            .querySelectorAll(".view")
+            .forEach((v) =>
+              v.classList.toggle("on", v.id === "v-" + t.dataset.view),
+            );
+        }),
+      );
+
+      /* ---------- allievi ---------- */
+      let sortK = "name",
+        sortDir = 1,
+        query = "";
+      const key = (s) =>
+        sortK === "name"
+          ? s.name
+          : sortK === "pct"
+            ? (s.pct ?? -1)
+            : sortK === "aula"
+              ? typeof s.tot.aula === "number"
+                ? s.tot.aula
+                : -1
+              : sortK === "stage"
+                ? typeof s.tot.stage === "number"
+                  ? s.tot.stage
+                  : -1
+                : typeof s.tot.conStage === "number"
+                  ? s.tot.conStage
+                  : -1;
+
+      function strip(s) {
+        return (
+          '<span class="strip" title="Medie per unità formativa">' +
+          s.areas
+            .map(
+              (a, i) =>
+                `<i class="${typeof a.media === "number" ? cls(a.media) : ""}" title="${D.areas[i].name}: ${typeof a.media === "number" ? fmt(a.media) : (a.media ?? "—")}"></i>`,
+            )
+            .join("") +
+          "</span>"
+        );
+      }
+      function renderStudents() {
+        const rows = D.students
+          .filter((s) => s.name.toLowerCase().includes(query))
+          .sort(
+            (a, b) =>
+              (key(a) > key(b) ? 1 : key(a) < key(b) ? -1 : 0) * sortDir,
+          );
+        document.getElementById("sbody").innerHTML = rows
+          .map((s) => {
+            const low = (s.pct ?? 0) < 80;
+            return `<tr class="row" tabindex="0" data-id="${s.id}" aria-expanded="false">
+      <td><span class="name">${s.name}</span> <span class="idtag">#${s.id}</span>${s.stato !== "ok" ? ` <span class="badge b-warn">${s.stato}</span>` : ""}</td>
+      <td><div class="pres"><div class="pbar"><i class="${low ? "low" : ""}" style="width:${Math.min(100, s.pct ?? 0)}%"></i></div><span class="pv">${fmt(s.pct)}%</span></div></td>
+      <td class="hide-m">${strip(s)}</td>
+      <td class="num">${chip(s.tot.aula)}</td>
+      <td class="num hide-m">${chip(s.tot.stage)}</td>
+      <td class="num">${chip(s.tot.conStage)}</td>
+    </tr>`;
+          })
+          .join("");
+        document
+          .querySelectorAll("#stab th[data-k] .arr")
+          .forEach((a) => (a.textContent = ""));
+        const th = document.querySelector(`#stab th[data-k="${sortK}"] .arr`);
+        if (th) th.textContent = sortDir > 0 ? "↑" : "↓";
+      }
+      document.getElementById("q").addEventListener("input", (e) => {
+        query = e.target.value.trim().toLowerCase();
+        renderStudents();
+      });
+      document.querySelectorAll("#stab th[data-k]").forEach((th) =>
+        th.addEventListener("click", () => {
+          const k = th.dataset.k;
+          if (sortK === k) sortDir *= -1;
+          else {
+            sortK = k;
+            sortDir = k === "name" ? 1 : -1;
+          }
+          renderStudents();
+        }),
+      );
+
+      function detailHTML(s) {
+        const t = s.tot;
+        const ufs = D.areas
+          .map((a, i) => {
+            const sa = s.areas[i];
+            return `<div class="uf">
+      <h4>${a.name}</h4><span class="yr">ANNO ${a.year}</span>
+      <ul>${a.subjects.map((m, j) => `<li><span>${m.name}<br><small style="font-size:11px">${m.teacher}</small></span>${chip(sa.grades[j])}</li>`).join("")}</ul>
+      <div class="avg"><em>Media UF</em>${chip(sa.media)}</div>
+    </div>`;
+          })
+          .join("");
+        return `<td colspan="6"><div class="dwrap">
+    <div class="dhead">
+      <h3>${s.name}</h3>
+      <div class="totline">
+        <span>Ore frequentate <b>${fmt(s.ore)} / ${D.meta.oreTot.toLocaleString("it-IT")}</b></span>
+        <span>Tecnico‑prof. <b>${fmt(t.tecnico)}</b></span>
+        <span>Base e trasversali <b>${fmt(t.base)}</b></span>
+        <span>Stage A1 <b>${typeof t.stage1 === "number" ? fmt(t.stage1) : (t.stage1 ?? "—")}</b></span>
+        <span>Stage A2 <b>${typeof t.stage2 === "number" ? fmt(t.stage2) : (t.stage2 ?? "—")}</b></span>
+        <span>Media percorso <b>${fmt(t.percorso)}</b></span>
+        <span>Con stage <b>${fmt(t.conStage)}</b></span>
+      </div>
+    </div>${ufs}</div></td>`;
+      }
+      document.getElementById("sbody").addEventListener("click", (e) => {
+        const tr = e.target.closest("tr.row");
+        if (!tr) return;
+        toggleDetail(tr);
+      });
+      document.getElementById("sbody").addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        const tr = e.target.closest("tr.row");
+        if (!tr) return;
+        e.preventDefault();
+        toggleDetail(tr);
+      });
+      function toggleDetail(tr) {
+        const open =
+          tr.nextElementSibling &&
+          tr.nextElementSibling.classList.contains("detail");
+        document.querySelectorAll("tr.detail").forEach((x) => x.remove());
+        document
+          .querySelectorAll("tr.row")
+          .forEach((x) => x.setAttribute("aria-expanded", "false"));
+        if (open) return;
+        const s = D.students.find((x) => x.id === tr.dataset.id);
+        const d = document.createElement("tr");
+        d.className = "detail";
+        d.innerHTML = detailHTML(s);
+        tr.after(d);
+        tr.setAttribute("aria-expanded", "true");
+      }
+
+      /* ---------- matrice ---------- */
+      (function () {
+        const areaTh = D.areas
+          .map((a) => `<th colspan="${a.subjects.length + 1}">${a.name}</th>`)
+          .join("");
+        const subTh = D.areas
+          .map(
+            (a) =>
+              a.subjects.map((m) => `<th>${m.name}</th>`).join("") +
+              `<th class="medcol">Media</th>`,
+          )
+          .join("");
+        const cell = (v) =>
+          v == null
+            ? '<td class="c-na">—</td>'
+            : typeof v === "number"
+              ? `<td class="c-${cls(v)}">${fmt(v)}</td>`
+              : v === "superato"
+                ? '<td class="c-hi">sup.</td>'
+                : v === "da recuperare"
+                  ? '<td class="c-low">recup.</td>'
+                  : `<td class="c-na">${v === "non previsto" ? "n.p." : "n.v."}</td>`;
+        const body = D.students
+          .map((s) => {
+            const cells = D.areas
+              .map(
+                (a, i) =>
+                  s.areas[i].grades.map(cell).join("") +
+                  (s.areas[i].media == null
+                    ? '<td class="medcol c-na">—</td>'
+                    : `<td class="medcol c-${cls(s.areas[i].media)}">${typeof s.areas[i].media === "number" ? fmt(s.areas[i].media) : s.areas[i].media}</td>`),
+              )
+              .join("");
+            return `<tr><td class="stick">${s.name}</td>${cells}</tr>`;
+          })
+          .join("");
+        document.getElementById("mwrap").innerHTML = `<table class="mtab">
+      <thead>
+        <tr class="arow"><th class="stick" rowspan="2" style="background:var(--acc-deep);color:#fff">Allievo</th>${areaTh}</tr>
+        <tr class="srow">${subTh}</tr>
+      </thead><tbody>${body}</tbody></table>`;
+      })();
+
+      /* ---------- materie ---------- */
+      (function () {
+        const cards = D.areas
+          .map((a, i) => {
+            const rows = a.subjects
+              .map((m, j) => {
+                const vals = nums(D.students.map((s) => s.areas[i].grades[j]));
+                const mean = vals.length
+                  ? vals.reduce((x, y) => x + y, 0) / vals.length
+                  : null;
+                const ins = vals.filter((v) => v < 60).length;
+                const w =
+                  mean == null
+                    ? 0
+                    : Math.max(0, Math.min(100, ((mean - 50) / 50) * 100));
+                return `<div class="srow2">
+        <div class="sn">${m.name}<small>${m.teacher}${ins ? ` · <span style="color:var(--g-low)">${ins} insuff.</span>` : ""}</small></div>
+        <div class="mini"><i style="width:${w}%"></i></div>
+        <span class="num">${mean == null ? '<span class="gr na">—</span>' : chip(mean)}</span>
+      </div>`;
+              })
+              .join("");
+            return `<div class="scard"><h3>${a.name} <span class="yr" style="font:500 11px var(--mono);color:var(--muted)">· ANNO ${a.year}</span></h3>${rows}</div>`;
+          })
+          .join("");
+        document.getElementById("subgrid").innerHTML = cards;
+      })();
+
+      renderStudents();
+    </script>
+  </body>
+</html>
